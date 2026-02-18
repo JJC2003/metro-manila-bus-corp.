@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MMBC - Menu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:400;700&family=Lato:400;700&family=Poppins:400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'DM Sans', 'Lato', 'Poppins', Arial, sans-serif;
+            background: linear-gradient(122deg, #e1f1ff 0%, #67aaf9 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Top Nav */
+        .top-nav {
+            background: rgba(255,255,255,0.96);
+            box-shadow: 0 4px 16px #3965ff29;
+            position: fixed; top:0; left:0; right:0; z-index:1000; padding:19px 0;
+        }
+
+        .nav-container {
+            max-width:1200px; margin:0 auto; padding:0 20px; display:flex;justify-content:space-between;align-items:center;
+        }
+
+        .logo {
+            font-family: 'Poppins', 'DM Sans';
+            font-size:1.59rem; font-weight:900; color:#3965ff; letter-spacing:2px; display:flex;align-items:center;gap:10px;
+        }
+
+        .nav-menu {
+            display: flex; gap:30px; align-items:center;
+        }
+
+        .nav-menu a {
+            text-decoration:none; color:#3965ff; font-family:'DM Sans','Poppins'; font-weight:700; font-size:1.09rem; letter-spacing:.04rem;
+            border-radius:24px; padding:8px 19px; background:rgba(226,239,255,0.35); box-shadow:0 2px 7px #bdf0ff22; transition:.14s;
+        }
+
+        .nav-menu a:hover {
+            color:#fff; background:linear-gradient(111deg,#3965ff 45%, #4ab5fc 100%); box-shadow: 0 1px 14px #3965ff44;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 15px;
+            margin-top: 100px; /* Adjust for fixed nav */
+        }
+
+        .menu-card {
+            background: rgba(255,255,255,0.92);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 6px 28px #3965ff0f;
+            border: 1px solid #dce6f8;
+            margin-bottom: 20px;
+        }
+
+        .menu-card h2 {
+            color: #3965ff;
+            margin: 0 0 20px 0;
+            font-size: 1.5rem;
+            font-family: 'Poppins', 'DM Sans';
+            font-weight: 900;
+            letter-spacing: .05rem;
+            text-align: center;
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: .18s;
+            font-family: 'DM Sans', 'Lato';
+            font-size: 1.1rem;
+            color: #213253;
+            font-weight: 700;
+        }
+
+        .menu-item:hover {
+            background: rgba(57,101,255,.05);
+            border-radius: 10px;
+            padding-left: 10px;
+            margin: 0 -10px;
+        }
+
+        .menu-item i {
+            color: #3965ff;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 30px;
+        }
+
+        .menu-item span {
+            flex: 1;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.96);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.7rem;
+            flex: 1;
+        }
+
+        .nav-item i {
+            font-size: 1.4rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #3965ff;
+        }
+
+        @media(max-width:768px){
+            .menu-card{
+                margin: -80px 16px 0;
+                padding: 26px 8px;
+            }
+            .container{
+                margin-top: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="menu-card">
+        <h2>Menu</h2>
+        <ul class="menu-list">
+            <li class="menu-item" onclick="window.location.href='dashboard.html'">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='rates.html'">
+                <i class="fas fa-dollar-sign"></i>
+                <span>Rates</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='help.html'">
+                <i class="fas fa-question-circle"></i>
+                <span>Help & Support</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='about.html'">
+                <i class="fas fa-info-circle"></i>
+                <span>About</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='index.html'">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <a href="main.html" class="nav-item">
+        <i class="fas fa-house"></i>
+        Home
+    </a>
+    <a href="live-gps.html" class="nav-item">
+        <i class="fas fa-paper-plane"></i>
+        Track
+    </a>
+    <a href="profile.html" class="nav-item">
+        <i class="fas fa-user"></i>
+        Profile
+    </a>
+    <a href="#" class="nav-item active">
+        <i class="fas fa-bars"></i>
+        Menu
+    </a>
+</nav>
+
+</body>
+</html>
+```

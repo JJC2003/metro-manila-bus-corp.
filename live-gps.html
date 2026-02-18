@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMBC Live GPS Tracker</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:400;700&family=Lato:400;700&family=Poppins:400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        :root {
+            --primary-blue: #0078ff;
+            --accent-blue: #00bfff;
+            --dark-navy: #001f3f;
+            --glass-white: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'DM Sans', 'Lato', 'Poppins', Arial, sans-serif;
+            color: #fff;
+            background: radial-gradient(circle at 20% 20%, #004e92, var(--dark-navy));
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            /* Padding removed here to handle space via flexbox instead */
+        }
+
+        /* Particles */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .particle { position: absolute; background: rgba(0, 136, 255, 0.5); border-radius: 50%; animation: float 10s infinite ease-in-out; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { transform: translateY(-80px) scale(1.3); opacity: 0.4; }
+        }
+
+        /* --- UPDATED HEADER FOR SCREENSHOT FIDELITY --- */
+        header {
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .header-banner {
+            text-align: center; 
+            padding: 12px; 
+            font-size: 1.4em; 
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        /* --- CONTROLS SECTION (PREVENTS OVERLAP) --- */
+        #top-section {
+            width: 100%;
+            background: #00122e; /* Matches dark navy in screenshot */
+            backdrop-filter: blur(15px);
+            padding: 15px 20px;
+            box-sizing: border-box;
+            border-bottom: 2px solid var(--accent-blue);
+            z-index: 90;
+        }
+
+        .controls-wrapper {
+            display: flex;
+            align-items: center; 
+            gap: 12px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            background: #ff5e62; /* Red button from screenshot */
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .search-area { flex: 1; }
+
+        .search-bar-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 45px;
+        }
+
+        .search-bar-container input {
+            flex: 1;
+            padding: 0 15px; 
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .search-submit-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            height: 100%;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* --- MAP CONTAINER --- */
+        #map { 
+            flex: 1; 
+            width: 100%; 
+            background: #f0f0f0; 
+            z-index: 1; /* Lowest layer */
+        }
+
+        #busList {
+            display: flex; gap: 12px; overflow-x: auto; padding: 10px 0 5px 0;
+        }
+        #busList::-webkit-scrollbar { height: 5px; }
+        #busList::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 10px; }
+
+        .bus-card {
+            min-width: 200px;
+            background: var(--glass-white); padding: 12px; border-radius: 12px;
+            transition: 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .bus-card:hover { background: rgba(0,136,255,0.3); border-color: var(--accent-blue); }
+        .bus-card h4 { margin: 0 0 5px; color: var(--accent-blue); font-size: 0.9rem; }
+
+        .distance-box {
+            background: rgba(0, 120, 255, 0.25); border: 1px solid var(--accent-blue);
+            padding: 8px 12px; border-radius: 10px; text-align: center;
+            font-size: 0.8rem; margin-top: 10px;
+        }
+
+        /* --- BOTTOM NAV (REFINED SIZING) --- */
+        .bottom-nav {
+            position: relative; /* Changed from fixed to prevent map occlusion */
+            background: rgba(255,255,255,1);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.7rem;
+            flex: 1;
+        }
+
+        .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 2px; }
+        .nav-item.active { color: #1877ff; }
+        
+        .glow { text-shadow: 0 0 10px var(--accent-blue); }
+    </style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<header>
+    <div class="header-banner">
+        🚌 <span class="glow">MMBC Live GPS Tracker</span>
+    </div>
+    
+    <div id="top-section">
+        <div class="controls-wrapper">
+            
+            <div class="search-area">
+                <div class="search-bar-container">
+                    <input type="text" id="searchInput" placeholder="Bus # or Destination..." onkeydown="if(event.key==='Enter') searchBus()">
+                    <button class="search-submit-btn" onclick="searchBus()">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="distanceBox" class="distance-box" style="display:none;"></div>
+        <div id="busList"></div>
+    </div>
+</header>
+
+<div id="map"></div>
+
+<nav class="bottom-nav">
+    <a href="main.html" class="nav-item">
+        <i class="fas fa-house"></i>
+        Home
+    </a>
+    <a href="#" class="nav-item active">
+        <i class="fas fa-paper-plane"></i>
+        Track
+    </a>
+    <a href="profile.html" class="nav-item">
+        <i class="fas fa-user"></i>
+        Profile
+    </a>
+    <a href="menu.html" class="nav-item">
+        <i class="fas fa-bars"></i>
+        Menu
+    </a>
+</nav>
+
+<script>
+    // Particle Logic
+    const particles = document.getElementById("particles");
+    for (let i = 0; i < 20; i++) {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.style.width = p.style.height = `${Math.random() * 8 + 4}px`;
+        p.style.left = `${Math.random() * 100}%`;
+        p.style.top = `${Math.random() * 100}%`;
+        p.style.animationDuration = `${Math.random() * 5 + 5}s`;
+        particles.appendChild(p);
+    }
+
+    // Map Setup
+    const map = L.map('map').setView([14.5995, 120.9842], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let busMarkers = {};
+    let allBuses = [];
+    let selectedBus = null;
+    let userMarker = null;
+
+    function haversine(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+        return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+    }
+
+    async function updateBusLocations() {
+        try {
+            const res = await fetch('get_bus_locations.php');
+            const buses = await res.json();
+            allBuses = buses;
+
+            buses.forEach(bus => {
+                if (busMarkers[bus.bus_id] || (selectedBus && selectedBus.bus_id === bus.bus_id)) {
+                    moveBus(bus);
+                }
+            });
+
+            if (selectedBus) {
+                let bus = buses.find(b => b.bus_id === selectedBus.bus_id);
+                if (bus) showDistance(bus);
+            }
+        } catch (err) { console.error("Update Error:", err); }
+    }
+
+    function moveBus(bus) {
+        const latLng = [parseFloat(bus.latitude), parseFloat(bus.longitude)];
+        if (busMarkers[bus.bus_id]) {
+            busMarkers[bus.bus_id].setLatLng(latLng);
+        } else {
+            const icon = L.icon({ 
+                iconUrl: 'backgrounds/search.png', 
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
+                popupAnchor: [0, -20]
+            });
+            const marker = L.marker(latLng, { icon })
+                .addTo(map)
+                .bindPopup(`<b>Bus ${bus.bus_number}</b><br>${bus.destination}`);
+            busMarkers[bus.bus_id] = marker;
+        }
+    }
+
+    function searchBus() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const busList = document.getElementById('busList');
+        busList.innerHTML = '';
+
+        const filtered = allBuses.filter(b => 
+            b.bus_number.toLowerCase().includes(query) || 
+            b.destination.toLowerCase().includes(query)
+        );
+
+        filtered.forEach(bus => {
+            const div = document.createElement('div');
+            div.className = 'bus-card';
+            div.innerHTML = `
+                <h4>Bus ${bus.bus_number}</h4>
+                <div class="bus-info">📍 ${bus.destination} <br>Status: ${bus.status}</div>
+            `;
+            div.onclick = () => {
+                selectedBus = bus;
+                Object.keys(busMarkers).forEach(id => {
+                    if(id !== bus.bus_id) { map.removeLayer(busMarkers[id]); delete busMarkers[id]; }
+                });
+                moveBus(bus);
+                map.flyTo([bus.latitude, bus.longitude], 15);
+                showDistance(bus);
+            };
+            busList.appendChild(div);
+        });
+    }
+
+    function showDistance(bus) {
+        const distanceBox = document.getElementById('distanceBox');
+        let dist, text;
+        if (userMarker) {
+            const userPos = userMarker.getLatLng();
+            dist = haversine(userPos.lat, userPos.lng, bus.latitude, bus.longitude);
+            text = "To You";
+        } else {
+            dist = haversine(bus.latitude, bus.longitude, bus.destination_lat, bus.destination_lng);
+            text = `To ${bus.destination}`;
+        }
+        const eta = (dist / (bus.speed > 5 ? bus.speed : 30)) * 60;
+        distanceBox.style.display = 'block';
+        distanceBox.innerHTML = `🧭 ${text}: <b>${dist.toFixed(2)} km</b> | ⏱️ ETA: ~${Math.round(eta)} mins`;
+    }
+
+    function trackUser() {
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(pos => {
+                const lat = pos.coords.latitude; const lng = pos.coords.longitude;
+                if (!userMarker) {
+                    const locatorIcon = L.icon({ iconUrl: 'backgrounds/locator.png', iconSize: [35, 35] });
+                    userMarker = L.marker([lat, lng], { icon: locatorIcon }).addTo(map).bindPopup("You are here");
+                } else { userMarker.setLatLng([lat, lng]); }
+            }, null, { enableHighAccuracy: true });
+        }
+    }
+
+    trackUser();
+    updateBusLocations();
+    setInterval(updateBusLocations, 5000);
+</script>
+</body>
+</html>
