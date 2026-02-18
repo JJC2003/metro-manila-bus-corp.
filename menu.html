@@ -3,122 +3,240 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MMBC - Menu</title>
+    <title>MMBC - Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:400;700&family=Lato:400;700&family=Poppins:400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #1877ff;
+            --secondary: #00d2ff;
+            --accent: #ffcc00;
+            --dark: #22304e;
+            --bg-gradient: linear-gradient(135deg, #e0f9f0 0%, #d5e6ff 100%);
+            --white: #ffffff;
+            --shadow: 0 8px 30px rgba(0,0,0,0.05);
+        }
+
         body {
-            font-family: 'DM Sans', 'Lato', 'Poppins', Arial, sans-serif;
-            background: linear-gradient(122deg, #e1f1ff 0%, #67aaf9 100%);
-            min-height: 100vh;
-            line-height: 1.6;
             margin: 0;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--dark);
+            min-height: 100vh;
+            padding-bottom: 90px;
         }
 
-        /* Top Nav */
-        .top-nav {
-            background: rgba(255,255,255,0.96);
-            box-shadow: 0 4px 16px #3965ff29;
-            position: fixed; top:0; left:0; right:0; z-index:1000; padding:19px 0;
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
 
-        .nav-container {
-            max-width:1200px; margin:0 auto; padding:0 20px; display:flex;justify-content:space-between;align-items:center;
+        .logo-badge {
+            background: var(--accent);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
         }
 
-        .logo {
-            font-family: 'Poppins', 'DM Sans';
-            font-size:1.59rem; font-weight:900; color:#3965ff; letter-spacing:2px; display:flex;align-items:center;gap:10px;
-        }
-
-        .nav-menu {
-            display: flex; gap:30px; align-items:center;
-        }
-
-        .nav-menu a {
-            text-decoration:none; color:#3965ff; font-family:'DM Sans','Poppins'; font-weight:700; font-size:1.09rem; letter-spacing:.04rem;
-            border-radius:24px; padding:8px 19px; background:rgba(226,239,255,0.35); box-shadow:0 2px 7px #bdf0ff22; transition:.14s;
-        }
-
-        .nav-menu a:hover {
-            color:#fff; background:linear-gradient(111deg,#3965ff 45%, #4ab5fc 100%); box-shadow: 0 1px 14px #3965ff44;
+        .header-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 1px;
         }
 
         .container {
             max-width: 450px;
             margin: 0 auto;
             padding: 15px;
-            margin-top: 100px; /* Adjust for fixed nav */
         }
 
-        .menu-card {
-            background: rgba(255,255,255,0.92);
-            border-radius: 20px;
-            padding: 36px;
-            box-shadow: 0 6px 28px #3965ff0f;
-            border: 1px solid #dce6f8;
+        .search-card {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 25px 15px; 
+            box-shadow: var(--shadow);
+            text-align: center;
             margin-bottom: 20px;
         }
 
-        .menu-card h2 {
-            color: #3965ff;
-            margin: 0 0 20px 0;
-            font-size: 1.5rem;
-            font-family: 'Poppins', 'DM Sans';
-            font-weight: 900;
-            letter-spacing: .05rem;
-            text-align: center;
+        .search-card h2 {
+            color: var(--primary);
+            margin: 0 0 5px 0;
+            font-size: 1.3rem;
         }
 
-        .menu-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .search-card p {
+            color: #777;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
         }
 
-        .menu-item {
+        .input-row {
+            display: flex;
+            gap: 8px; 
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .input-box {
+            background: var(--secondary);
+            border-radius: 12px; 
+            padding: 0 8px;
             display: flex;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #e2e8f0;
-            cursor: pointer;
-            transition: .18s;
-            font-family: 'DM Sans', 'Lato';
-            font-size: 1.1rem;
-            color: #213253;
-            font-weight: 700;
-        }
-
-        .menu-item:hover {
-            background: rgba(57,101,255,.05);
-            border-radius: 10px;
-            padding-left: 10px;
-            margin: 0 -10px;
-        }
-
-        .menu-item i {
-            color: #3965ff;
-            font-size: 1.5rem;
-            margin-right: 15px;
-            width: 30px;
-        }
-
-        .menu-item span {
+            color: white;
             flex: 1;
+            height: 45px;
+            position: relative;
+            min-width: 0; 
         }
 
-        .menu-item:last-child {
-            border-bottom: none;
+        .input-box.narrow {
+            flex: 1; 
+            position: relative;
         }
 
-        /* Bottom Nav */
+        .input-box.narrow::after {
+            content: '\f107'; 
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 10px;
+            color: white;
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+
+        .input-box i { 
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+
+        .functional-input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem; 
+            width: 100%;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .functional-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+            margin-left: 2px;
+        }
+
+        select.functional-input {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 15px;
+        }
+
+        .search-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+            transition: transform 0.1s;
+            height: 45px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-btn.small {
+            flex: 0 0 auto; /* Won't grow or shrink */
+            padding: 0 12px;
+            font-size: 0.85rem;
+        }
+
+        .search-btn.small i {
+            margin-right: 4px;
+        }
+
+        .search-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* --- INFO STRIP --- */
+        .info-strip {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .info-strip span i { color: var(--primary); margin-right: 5px; }
+
+        .dest-card {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: none; 
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .dest-info h3 { margin: 0 0 10px 0; font-size: 1.4rem; font-style: italic; }
+        
+        .dest-detail { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
+        .dest-detail i { color: var(--primary); width: 20px; }
+
+        .seats-left {
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .book-btn {
+            background: var(--accent);
+            text-decoration: none; 
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            color: #22304e;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 204, 0, 0.3);
+            transition: 0.2s;
+        }
+
+        .book-btn:active {
+            transform: scale(0.95);
+        }
+
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255,255,255,0.96);
+            background: var(--white);
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
@@ -136,62 +254,86 @@
             flex: 1;
         }
 
-        .nav-item i {
-            font-size: 1.4rem;
-            display: block;
-            margin-bottom: 2px;
-        }
+        .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 2px; }
+        .nav-item.active { color: var(--primary); }
 
-        .nav-item.active {
-            color: #3965ff;
-        }
-
-        @media(max-width:768px){
-            .menu-card{
-                margin: -80px 16px 0;
-                padding: 26px 8px;
-            }
-            .container{
-                margin-top: 36px;
-            }
-        }
     </style>
 </head>
 <body>
+
+<header>
+    <div class="logo-badge"><i class="fas fa-bus"></i></div>
+    <div class="header-title">MMBC</div>
+</header>
+
 <div class="container">
-    <div class="menu-card">
-        <h2>Menu</h2>
-        <ul class="menu-list">
-            <li class="menu-item" onclick="window.location.href='dashboard.html'">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </li>
-            <li class="menu-item" onclick="window.location.href='settings.html'">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </li>
-            <li class="menu-item" onclick="window.location.href='rates.html'">
-                <i class="fas fa-dollar-sign"></i>
-                <span>Rates</span>
-            </li>
-            <li class="menu-item" onclick="window.location.href='help.html'">
-                <i class="fas fa-question-circle"></i>
-                <span>Help & Support</span>
-            </li>
-            <li class="menu-item" onclick="window.location.href='about.html'">
-                <i class="fas fa-info-circle"></i>
-                <span>About</span>
-            </li>
-            <li class="menu-item" onclick="window.location.href='index.html'">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </li>
-        </ul>
+    
+    <div class="search-card">
+        <h2>Travel with MMBC</h2>
+        <p>Enjoy!</p>
+        
+        <form id="searchForm" onsubmit="handleSearch(event)">
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="date" id="travelDate" class="functional-input" required>
+                </div>
+                <div class="input-box narrow">
+                    <i class="fas fa-location-dot"></i>
+                    <select id="destination" class="functional-input">
+                        <option value="all">All</option>
+                        <option value="ayala">AYALA</option>
+                        <option value="manila">MANILA</option>
+                    </select>
+                </div>
+                <button type="submit" class="search-btn small">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
     </div>
+
+    <div class="info-strip">
+        <span id="busCount"><i class="fas fa-bus"></i> 0 Buses</span>
+        <span id="seatCount"><i class="fas fa-chair"></i> 0 seats</span>
+        <span id="destCount"><i class="fas fa-location-dot"></i> 0 Destinations</span>
+    </div>
+
+    <div id="busList">
+        <div class="dest-card" data-location="ayala" data-date="2026-02-18">
+            <div class="dest-info">
+                <h3>AYALA</h3>
+                <div class="dest-detail"><i class="far fa-clock"></i> Departs: 6:00 PM</div>
+                <div class="dest-detail"><i class="fas fa-bus"></i> Bus No.: 101</div>
+                <div class="seats-left">10 SEATS LEFT</div>
+            </div>
+            <a href="book.html" class="book-btn">BOOK NOW</a>
+        </div>
+
+        <div class="dest-card" data-location="ayala" data-date="2026-02-19">
+            <div class="dest-info">
+                <h3>AYALA</h3>
+                <div class="dest-detail"><i class="far fa-clock"></i> Departs: 6:30 PM</div>
+                <div class="dest-detail"><i class="fas fa-bus"></i> Bus No.: 102</div>
+                <div class="seats-left">8 SEATS LEFT</div>
+            </div>
+            <a href="book.html" class="book-btn">BOOK NOW</a>
+        </div>
+
+        <div class="dest-card" data-location="manila" data-date="2026-02-20">
+            <div class="dest-info">
+                <h3>MANILA</h3>
+                <div class="dest-detail"><i class="far fa-clock"></i> Departs: 7:00 PM</div>
+                <div class="dest-detail"><i class="fas fa-bus"></i> Bus No.: 103</div>
+                <div class="seats-left">12 SEATS LEFT</div>
+            </div>
+            <a href="book.html" class="book-btn">BOOK NOW</a>
+        </div>
+    </div>
+
 </div>
 
 <nav class="bottom-nav">
-    <a href="main.html" class="nav-item">
+    <a href="#" class="nav-item active">
         <i class="fas fa-house"></i>
         Home
     </a>
@@ -203,12 +345,70 @@
         <i class="fas fa-user"></i>
         Profile
     </a>
-    <a href="#" class="nav-item active">
+    <a href="menu.html" class="nav-item">
         <i class="fas fa-bars"></i>
         Menu
     </a>
 </nav>
 
+<script>
+    function handleSearch(event) {
+        event.preventDefault();
+        
+        const selectedDate = document.getElementById('travelDate').value;
+        const selectedDest = document.getElementById('destination').value;
+        const cards = document.querySelectorAll('.dest-card');
+        
+        cards.forEach(card => {
+            card.style.display = 'none';
+        });
+        
+        let visibleCards = [];
+        
+        if (selectedDate) {
+            cards.forEach(card => {
+                const location = card.getAttribute('data-location');
+                const date = card.getAttribute('data-date');
+                if (date === selectedDate && (selectedDest === 'all' || location === selectedDest)) {
+                    card.style.display = 'flex';
+                    visibleCards.push(card);
+                }
+            });
+        }
+
+        updateInfoStrip(visibleCards);
+
+        const btn = document.querySelector('.search-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+        }, 600);
+    }
+
+    function updateInfoStrip(visibleCards) {
+        const busCount = visibleCards.length;
+        document.getElementById('busCount').innerHTML = `<i class="fas fa-bus"></i> ${busCount} Buses`;
+
+        let totalSeats = 0;
+        visibleCards.forEach(card => {
+            const seatsText = card.querySelector('.seats-left').textContent;
+            const seatsMatch = seatsText.match(/(\d+) SEATS LEFT/);
+            if (seatsMatch) {
+                totalSeats += parseInt(seatsMatch[1]);
+            }
+        });
+        document.getElementById('seatCount').innerHTML = `<i class="fas fa-chair"></i> ${totalSeats} seats`;
+
+        const destinations = new Set();
+        visibleCards.forEach(card => {
+            destinations.add(card.getAttribute('data-location'));
+        });
+        const destCount = destinations.size;
+        document.getElementById('destCount').innerHTML = `<i class="fas fa-location-dot"></i> ${destCount} Destinations`;
+    }
+</script>
+
 </body>
 </html>
-```
