@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMBC.Bus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1877ff;
+            --secondary: #00d4ff;
+            --accent: #ffc107;
+            --dark: #22304e;
+            --glass: rgba(15, 23, 42, 0.75);
+            --danger: #ff4d4d;
+            --warning: #ffcc00;
+            --success: #2ecc71;
+        }
+
+        body {
+            margin: 0; padding: 0; font-family: 'Inter', sans-serif;
+            background: url('backgrounds/mmbc3.jpg') no-repeat center center fixed;
+            background-size: cover; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        #notification-container { 
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 2000; 
+            width: auto;
+            pointer-events: none;
+        }
+        .toast {
+            background: #fff; color: var(--dark); 
+            padding: 12px 20px;
+            border-radius: 12px;
+            display: flex; align-items: center; gap: 10px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transform: translateY(-100px); 
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 5px solid var(--danger); 
+            font-weight: 600; 
+            font-size: 0.85rem;
+            white-space: nowrap; 
+            pointer-events: auto;
+        }
+        .toast.show { 
+            transform: translateY(0); 
+        }
+        .toast.warn { border-left-color: var(--warning); }
+        .toast.success { border-left-color: var(--success); }
+        .toast i { font-size: 1rem; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .shake { animation: shake 0.3s ease-in-out; }
+        .glass-container {
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            width: 90%; max-width: 420px; padding: 35px 25px; border-radius: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            text-align: center; color: white; transition: all 0.4s ease;
+        }
+        .brand-header { margin-bottom: 25px; }
+        .bus-logo {
+            background: url('backgrounds/bus.png') no-repeat center center; 
+            background-size: contain; 
+            width: 100px; 
+            height: 80px; 
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto;  
+            filter: drop-shadow(0 8px 15px rgb(255, 191, 1));
+        }
+        h1 {
+            font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-weight: 900;
+            font-size: 1.8rem; margin: 0; letter-spacing: 2px;
+            background: linear-gradient(to bottom, #0088f7, #bbbbbb);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .view-title { font-size: 1rem; color: rgba(255,255,255,0.7); margin-top: 5px; margin-bottom: 25px; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 6px; padding-left: 5px; }
+        .input-wrapper {
+            background: rgba(255, 255, 255, 0.1); border-radius: 12px; display: flex;
+            align-items: center; padding: 10px 15px; border: 1px solid rgba(255, 255, 255, 0.2); transition: 0.3s;
+        }
+        .input-wrapper:focus-within { border-color: var(--secondary); background: rgba(255, 255, 255, 0.15); }
+        .input-wrapper i { color: var(--secondary); margin-right: 12px; width: 20px; text-align: center; font-size: 0.9rem; }
+        .input-wrapper input { background: transparent; border: none; outline: none; color: white; width: 100%; font-size: 0.9rem; }
+        .input-wrapper input::placeholder { color: rgba(255, 255, 255, 0.4); }
+        .toggle-password { margin-right: 0 !important; margin-left: 10px; cursor: pointer; color: rgba(255,255,255,0.5) !important; }
+        .btn-primary {
+            width: 100%; background: linear-gradient(90deg, #295bff, #265ae9); color: white;
+            border: none; padding: 14px; border-radius: 12px; font-size: 0.95rem; font-weight: 700;
+            cursor: pointer; transition: 0.3s; margin-top: 5px;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(29, 78, 216, 0.4); }
+        .flex-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 0.8rem; }
+        .link-text { 
+            color: var(--accent); 
+            text-decoration: none; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+        .dot { 
+          color: var(--danger); 
+          -webkit-text-fill-color: initial; 
+        }
+        .link-text:hover { 
+            color: #fff; 
+            text-underline-offset: 4px;
+            filter: drop-shadow(0 0 5px var(--danger));
+        }
+        .link-text:active {
+            transform: scale(0.95);
+        }        .footer-text { margin-top: 20px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); }
+        .auth-view { display: none; }
+        .auth-view.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="notification-container">
+    <div id="toast" class="toast">
+        <i id="toastIcon" class="fas fa-exclamation-circle"></i>
+        <span id="toastMsg">Message here</span>
+    </div>
+</div>
+
+<div class="glass-container" id="authCard">
+    <div class="brand-header">
+        <div class="bus-logo"></div>
+        <h1>MMBC<span class="dot">.</span>BUS</h1>
+    </div>
+
+    <div id="loginView" class="auth-view active">
+        <div class="input-group">
+            <label>Email Address</label>
+            <div class="input-wrapper"><i class="fas fa-envelope"></i><input type="email" id="emailInput" placeholder="email@example.com"></div>
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPass" placeholder="••••••••">
+                <i class="fas fa-eye toggle-password" id="eyeIcon" onclick="togglePass('loginPass', 'eyeIcon')"></i>
+            </div>
+        </div>
+        <div class="flex-row">
+            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox"> Remember me</label>
+            <a class="link-text" onclick="showView('forgot')">Forgot Password?</a>
+        </div>
+        <button class="btn-primary" onclick="handleLogin()">LOG IN</button>
+        <div class="footer-text">Don't have an account? <a class="link-text" style="margin-left: 10px;" onclick="showView('signup')">Sign Up</a></div>
+    </div>
+
+    <div id="forgotView" class="auth-view">
+        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 25px;">Enter your email to reset your password.</p>
+        <div class="input-group">
+            <div class="input-wrapper"><i class="fas fa-paper-plane"></i><input type="email" placeholder="email@example.com"></div>
+        </div>
+        <button class="btn-primary">SEND RESET LINK</button>
+        <div class="footer-text"><a class="link-text" onclick="showView('login')"><i class="fas fa-arrow-left"></i> Back to Login</a></div>
+    </div>
+
+    <div id="signupView" class="auth-view">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="input-group"><div class="input-wrapper"><i class="fas fa-user"></i><input type="text" placeholder="First Name"></div></div>
+            <div class="input-group"><div class="input-wrapper"><i class="fas fa-user"></i><input type="text" placeholder="Last Name"></div></div>
+        </div>
+        <div class="input-group">
+            <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="regPass" placeholder="Password:">
+                <i class="fas fa-eye toggle-password" id="eyeIconReg" onclick="togglePass('regPass', 'eyeIconReg')"></i>
+            </div>
+        </div>
+        <div class="input-group"><div class="input-wrapper"><i class="fas fa-envelope"></i><input type="email" placeholder="Email:"></div></div>
+        <div class="input-group"><div class="input-wrapper"><i class="fas fa-phone"></i><input type="tel" placeholder="Mobile:"></div></div>
+        <div class="input-group">
+            <div style="display:grid; grid-template-columns: 1fr auto; gap:10px;">
+                <div class="input-wrapper"><i class="fas fa-key"></i><input type="text" placeholder="Code:"></div>
+                <button style="background:var(--secondary); border:none; padding:0 15px; border-radius:12px; font-weight:700; cursor:pointer; font-size: 0.8rem;">Send</button>
+            </div>
+        </div>
+        <button class="btn-primary">CREATE ACCOUNT</button>
+        <div class="footer-text">Already have an account? <a class="link-text" style="margin-left: 10px;" onclick="showView('login')">Sign In</a></div>
+    </div>
+</div>
+
+<script>
+    function showView(viewName) {
+        document.querySelectorAll('.auth-view').forEach(view => view.classList.remove('active'));
+        document.getElementById(viewName + 'View').classList.add('active');
+    }
+
+    function togglePass(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+
+    function triggerToast(msg, type = 'error') {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMsg');
+        const toastIcon = document.getElementById('toastIcon');
+        const card = document.getElementById('authCard');
+
+        toastMsg.innerText = msg;
+        toast.classList.remove('warn', 'success');
+        
+        if(type === 'warn') {
+            toast.classList.add('warn');
+            toastIcon.className = 'fas fa-exclamation-triangle';
+            card.classList.add('shake');
+        } else if (type === 'success') {
+            toast.classList.add('success');
+            toastIcon.className = 'fas fa-check-circle';
+        } else {
+            toastIcon.className = 'fas fa-exclamation-circle';
+            card.classList.add('shake');
+        }
+
+        toast.classList.add('show');
+        
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        setTimeout(() => { card.classList.remove('shake'); }, 300);
+    }
+
+    function handleLogin() {
+        const email = document.getElementById('emailInput').value;
+        const pass = document.getElementById('loginPass').value;
+
+        if (!email || !pass) {
+            triggerToast("Enter email and password first!", "warn");
+            return;
+        }
+
+        if (email === "user@gmail.com" && pass === "123") {
+            triggerToast("Login Successful!", "success");
+            setTimeout(() => { window.location.href = "main.html"; }, 2000);
+        } else {
+            triggerToast("No account found with this email.", "error");
+        }
+    }
+</script>
+
+</body>
+</html>
