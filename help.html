@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MMBC Help & FAQ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@700;400&family=Lato:wght@700;400&family=Poppins:wght@900;700;400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'DM Sans', 'Lato', 'Poppins', Arial, sans-serif;
+      background: linear-gradient(120deg, #d5e6ff 0%, #b0cbff 100%);
+      color: #213253;
+      min-height: 100vh;
+      margin: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+    #busCanvasBG {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.62;
+    }
+    .container {
+      max-width: 600px;
+      margin: 60px auto 0;
+      padding: 0 18px 50px;
+      position: relative;
+      z-index: 3;
+      animation: fadeUp 1s cubic-bezier(.21,.72,.51,1.04);
+    }
+    @keyframes fadeUp {
+      0% {opacity: 0; transform: translateY(55px);}
+      100% {opacity: 1; transform: translateY(0);}
+    }
+    header {
+      background: rgba(255,255,255,0.42);
+      border-bottom: 2px solid #deebfb;
+      box-shadow: 0 8px 32px #6486c128;
+      backdrop-filter: blur(14px);
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 7px;
+      animation: fadeUp 1.16s cubic-bezier(.17,.61,.32,1.18);
+    }
+    .header-logo {
+      font-family: 'Poppins', 'DM Sans', Arial, sans-serif;
+      font-size: 2.14rem;
+      font-weight: 900;
+      letter-spacing: 2.8px;
+      color: #399fff;
+      background: linear-gradient(90deg, #3965ff 50%, #4ab5fc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: logoEntrance 1.32s cubic-bezier(.29,.7,.39,1.03);
+      filter: drop-shadow(0 2px 8px #3965ff55);
+    }
+    @keyframes logoEntrance {
+      0% {opacity:0;transform:scale(.99) translateY(-22px);}
+      80% {opacity:.93;}
+      100%{opacity:1;transform:scale(1) translateY(0);}
+    }
+    .header-title {
+      font-family: 'Lato', 'DM Sans', Arial, sans-serif;
+      font-weight: 700;
+      color: #213253;
+      font-size: 1.27rem;
+      letter-spacing: 1.8px;
+      text-shadow: 0 2px 10px #fff2;
+      animation: fadeUp 1.3s cubic-bezier(.17,.61,.32,1.09);
+    }
+    .back-btn {
+      position: fixed;
+      top: 24px;
+      left: 20px;
+      z-index: 10;
+      background: linear-gradient(100deg,#3965ff 36%, #48c6f7 100%);
+      color: #fff;
+      box-shadow: 0 6px 22px #3965ff24;
+      border-radius: 56px;
+      border: none;
+      font-family: 'Poppins', 'DM Sans', Arial, sans-serif;
+      padding: 14px 19px 14px 13px;
+      font-size: 1.22rem;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      cursor: pointer;
+      outline: none;
+      transition: background .19s, box-shadow .18s, transform .17s;
+      animation: btnBounce 1.66s infinite alternate cubic-bezier(.61,-0.02,.62,1.14);
+    }
+    @keyframes btnBounce {0% {transform: scale(1);} 60% {transform: scale(1.10);} 100% {transform: scale(1);}}
+    .back-btn:hover, .back-btn:focus {
+      background: linear-gradient(100deg,#48c6f7 36%, #3965ff 100%);
+      box-shadow: 0 1px 40px #3965ff57;
+    }
+    .glass-card {
+      background: rgba(255,255,255,0.81);
+      border-radius: 22px;
+      box-shadow: 0 12px 38px #3965ff1a, 0 1.5px 3.5px #d5e6ff;
+      backdrop-filter: blur(14px);
+      margin-bottom: 36px;
+      padding: 30px 22px 27px;
+      animation: cardPop .8s cubic-bezier(.27,.79,.41,1.08);
+    }
+    @keyframes cardPop {
+      0% {opacity:0;transform:scale(.98);}
+      92% {opacity:.98;transform:scale(1.05);}
+      100%{opacity:1;transform:scale(1);}
+    }
+    .assistant-header {
+      font-family: 'Poppins', 'DM Sans';
+      color: #3965ff;
+      font-weight: 800;
+      font-size: 1.16rem;
+      letter-spacing: 0.4px;
+      margin-bottom: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: fadeUp .68s cubic-bezier(.32,.71,.6,1.09);
+    }
+    .chat-window {
+      background: rgba(226,239,255,0.80);
+      border-radius: 17px;
+      padding: 13px;
+      max-height: 350px;
+      overflow-y: auto;
+      border: 1px solid #bddfffac;
+      margin-bottom: 8px;
+    }
+    .message { margin: 9px 0; display: flex; }
+    .message.user { justify-content: flex-end; }
+    .message.bot { justify-content: flex-start; }
+    .bubble {
+      font-family: 'Lato', 'DM Sans';
+      max-width: 82%;
+      padding: 12px 18px;
+      border-radius: 23px;
+      font-size: 1.04rem;
+      box-shadow: 0 2px 11px #bddfff45;
+      color: #213253;
+      white-space: pre-wrap;
+      line-height: 1.54;
+      position: relative;
+      animation: popInBubble .21s cubic-bezier(.79,2.13,.39,.99);
+    }
+    @keyframes popInBubble { from { opacity:.35; transform: scale(.85) translateY(20px);} to { opacity:1; transform: scale(1) translateY(0);}
+    }
+    .user .bubble {
+      background: linear-gradient(104deg, #3965ff 42%, #6ce1ff 90%);
+      color: white;
+      border-bottom-left-radius: 34px;
+      border-bottom-right-radius: 11px;
+    }
+    .bot .bubble {
+      background: linear-gradient(80deg, #e8f3ff 72%, #bdf0ff 100%);
+      border-bottom-left-radius: 11px;
+      border-bottom-right-radius: 26px;
+      border-top-left-radius: 13px;
+    }
+    .typing {
+      display: inline-block;
+      background: #e8f3ff;
+      border-radius: 11px;
+      padding: 7px 13px;
+      font-size: 0.93rem;
+      color: #213253;
+      font-style: italic;
+      letter-spacing: 0.56px;
+      animation: pulseType .7s infinite;
+    }
+    @keyframes pulseType {
+      0% { box-shadow:none;}
+      66% { box-shadow:0 1px 12px #bdf0ff44;}
+      100%{ box-shadow:none;}
+    }
+    .assistant-box form {
+      display: flex; margin-top: 13px; gap: 12px;
+    }
+    .assistant-box input[type="text"] {
+      font-family: 'DM Sans', 'Lato';
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 11px;
+      border: 1.6px solid #deebfb;
+      font-size: 1.08rem;
+      background: rgba(241,244,250,0.84);
+      transition: border .21s;
+    }
+    .assistant-box input[type="text"]:focus {
+      border-color: #3965ff;
+      outline: none;
+      background: rgba(255,255,255,0.94);
+    }
+    .assistant-box button {
+      font-family:'Poppins','DM Sans',Arial,sans-serif;
+      background: linear-gradient(120deg, #3965ff 57%, #6ce1ff 100%);
+      color: #fff;
+      border: none;
+      padding: 12px 21px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.10rem;
+      transition: background .22s, transform .13s;
+      box-shadow: 0 4px 17px #6ce1ff18;
+      outline: none;
+    }
+    .assistant-box button:hover, .assistant-box button:focus {
+      background: linear-gradient(120deg,#6ce1ff 90%, #3965ff 100%);
+      transform: translateY(-3px) scale(1.04);
+    }
+    h2 {margin: 40px 0 10px; font-family:'Poppins','DM Sans'; font-size:1.17rem; font-weight:900; letter-spacing: 0.14rem; color:#3965ff;}
+    .faq-section {
+      background: rgba(255,255,255,0.87);
+      border-radius: 19px;
+      box-shadow: 0 3px 13px #3965ff16;
+      border: 1.5px solid #e7ecf8bb;
+      padding: 27px 22px 14px;
+      margin-bottom: 27px;
+      backdrop-filter: blur(7px);
+      animation: cardPop .8s .11s backwards cubic-bezier(.27,.79,.41,1.08);
+    }
+    .faq-section h3 {
+      font-family:'DM Sans','Lato';
+      font-size:1.15rem; font-weight:700; color:#3965ff;letter-spacing:.11rem;margin-bottom:13px;display:flex;align-items:center;gap:7px;
+      animation: fadeUp .62s .19s cubic-bezier(.17,.61,.32,1.08) backwards;
+    }
+    .faq-list {margin-top: 2px; padding: 0; list-style: none;}
+    .faq-q {
+      font-family: 'DM Sans', 'Lato';
+      font-weight: 800;
+      margin: 16px 0 0;
+      font-size: 1.08rem;
+      color: #19419b;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 10px;
+      background: none; outline: none; border: none;
+      padding: 0; transition: color .19s;
+      position: relative; z-index: 2;
+      animation: fadeUp .70s .22s cubic-bezier(.21,.55,.39,1.01) backwards;
+    }
+    .faq-q .fa-question-circle {color: #4ab5fc;}
+    .faq-q.active, .faq-q:focus { color: #3965ff; }
+    .faq-q .faq-anim {
+      display: inline-block;
+      transition: transform .25s;
+    }
+    .faq-q.active .faq-anim { transform: rotate(90deg) scale(1.11);}
+    .faq-a {
+      font-family: 'Lato','DM Sans';
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.42s cubic-bezier(.7,-0.41,.39,1.53), opacity 0.19s, transform .23s;
+      opacity: 0;
+      margin-bottom: 3px;
+      padding-left: 28px;
+      color: #204484;
+      border-left: 2.5px solid #e0e7ef;
+      font-weight: 400;
+      font-size: 1.02rem;
+      background: none;
+      transform: scaleY(.85) translateY(12px);
+    }
+    .faq-q.active + .faq-a {
+      opacity: 1;
+      max-height: 190px;
+      padding-top: 6px;
+      margin-bottom: 7px;
+      animation: fadeInFaq .41s cubic-bezier(.47,0,.79,1.18);
+      transform: scaleY(1) translateY(0);
+    }
+    @keyframes fadeInFaq {0%{transform:scaleY(.5) translateY(20px);}90%{transform:scaleY(1.07);}100%{transform:scaleY(1) translateY(0);}}
+    @media (max-width:670px) {
+      .container { max-width:99vw;padding:0 3vw 30px;}
+      .faq-section { padding: 13px 3vw 7px;}
+      .glass-card {padding:12px 3vw 12px;}
+      .header-logo { font-size: 1.12rem;}
+      .header-title { font-size: 0.96rem;}
+      header {min-height: 48px;}
+      .back-btn {font-size:.97rem;}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="busCanvasBG"></canvas>
+  <a href="main.html" class="back-btn" title="Back to Home"><i class="fas fa-arrow-left"></i> Back</a>
+  <header>
+    <span class="header-logo"><i class="fas fa-bus"></i> MMBC</span>
+    <span class="header-title">Help & FAQ</span>
+  </header>
+  <div class="container">
+    <h2><i class="fas fa-robot" style="color:#4ab5fc;"></i> MMBC Virtual Assistant</h2>
+    <div class="glass-card assistant-box">
+      <div class="assistant-header"><i class="fas fa-robot"></i> Ask MMBC Assistant</div>
+      <div class="chat-window" id="chatWindow">
+        <div class="message bot"><div class="bubble">Hi! 👋 I'm your MMBC Assistant. How can I help you today?</div></div>
+      </div>
+      <form id="assistantForm" autocomplete="off">
+        <input type="text" id="userQuestion" placeholder="Type your question..." required aria-label="Ask a question to the virtual assistant">
+        <button type="submit" aria-label="Send"><i class="fas fa-paper-plane"></i></button>
+      </form>
+    </div>
+    <div class="faq-section glass-card">
+      <h3><i class="fas fa-question-circle" style="color:#4ab5fc;"></i> Frequently Asked Questions</h3>
+      <ul class="faq-list" id="faqList">
+        <li>
+          <button class="faq-q" aria-expanded="false">
+            <i class="fas fa-question-circle faq-anim"></i>How do I book a ticket?
+          </button>
+          <div class="faq-a">Go to “Book Now,” choose your route, seats, fill in details, and confirm your payment.</div>
+        </li>
+        <li>
+          <button class="faq-q" aria-expanded="false">
+            <i class="fas fa-question-circle faq-anim"></i>What payment options are available?
+          </button>
+          <div class="faq-a">You can pay via debit/credit card, GCash, Maya, or partner payment centers.</div>
+        </li>
+        <li>
+          <button class="faq-q" aria-expanded="false">
+            <i class="fas fa-question-circle faq-anim"></i>How do I contact support?
+          </button>
+          <div class="faq-a">Use our Messenger chat, reach us via the “Support” section, or email help@mmbc.com.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+<script>
+  const canvas = document.getElementById('busCanvasBG');
+  const ctx = canvas.getContext('2d');
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const buses = [];
+  for(let i=0; i<3; i++) {
+    buses.push({
+      x: Math.random()*canvas.width,
+      y: canvas.height*0.14 + i*66,
+      size: 90 + Math.random()*28,
+      speed: 0.95 + Math.random()*0.6
+    });
+  }
+  function drawBus(bus) {
+    ctx.save();
+    ctx.translate(bus.x, bus.y);
+    ctx.fillStyle = '#3965ffc4';
+    ctx.fillRect(0, 0, bus.size, bus.size*0.33);
+    ctx.fillStyle = '#e4eefb';
+    for(let w=0; w<4; w++){
+      ctx.fillRect(14+w*22, 8, 16, 14);
+    }
+    ctx.beginPath();
+    ctx.arc(15, bus.size*0.33, 8, 0, Math.PI*2);
+    ctx.arc(bus.size-22, bus.size*0.33, 8, 0, Math.PI*2);
+    ctx.fillStyle = '#213253aa';
+    ctx.shadowColor = "#21325344";
+    ctx.shadowBlur = 4;
+    ctx.fill();
+    ctx.restore();
+  }
+  function animateBuses() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(const bus of buses){
+      bus.x += bus.speed;
+      if(bus.x>canvas.width+10) bus.x=-bus.size;
+      drawBus(bus);
+    }
+    requestAnimationFrame(animateBuses);
+  }
+  animateBuses();
+
+  document.querySelectorAll(".faq-q").forEach(button => {
+    button.addEventListener("click", function(){
+      this.classList.toggle("active");
+      const answer = this.nextElementSibling;
+      const expanded = this.classList.contains("active");
+      document.querySelectorAll(".faq-q").forEach(btn => {
+        if (btn !== this) {
+          btn.classList.remove("active");
+          btn.setAttribute("aria-expanded","false");
+          btn.nextElementSibling.style.maxHeight = null;
+        }
+      });
+      this.setAttribute("aria-expanded",expanded);
+      if(expanded){
+        answer.style.maxHeight = answer.scrollHeight + 20 + "px";
+      } else {
+        answer.style.maxHeight = null;
+      }
+    });
+  });
+
+  const form = document.getElementById("assistantForm");
+  const input = document.getElementById("userQuestion");
+  const chatWindow = document.getElementById("chatWindow");
+
+  function appendMessage(sender, text) {
+    const msg = document.createElement("div");
+    msg.classList.add("message", sender);
+    const bubble = document.createElement("div");
+    bubble.classList.add("bubble");
+    msg.appendChild(bubble);
+    chatWindow.appendChild(msg);
+    let i = 0;
+    const speed = 14;
+    function typeChar() {
+      if (i < text.length) {
+        bubble.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeChar, speed);
+      }
+    }
+    typeChar();
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const question = input.value.trim();
+    if (!question) return;
+    appendMessage("user", question);
+    input.value = "";
+    const typing = document.createElement("div");
+    typing.classList.add("message", "bot");
+    typing.innerHTML = `<div class="typing">typing</div>`;
+    chatWindow.appendChild(typing);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+    try {
+      const res = await fetch("assistant_api.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "question=" + encodeURIComponent(question)
+      });
+      const text = await res.text();
+      const delay = Math.min(700, Math.max(300, question.length * 19));
+      setTimeout(() => {
+        typing.remove();
+        appendMessage("bot", text);
+      }, delay);
+    } catch (err) {
+      typing.remove();
+      appendMessage("bot", "Sorry, something went wrong. Please try again later.");
+    }
+  });
+</script>
+</body>
+</html>
