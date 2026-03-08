@@ -10,7 +10,6 @@
 
   <style>
     :root {
-      /* LIGHT THEME */
       --bg-main: linear-gradient(120deg, #eaf6ff 0%, #e0e5ff 100%);
       --text-main: #24346e;
       --text-muted: #4b5563;
@@ -36,7 +35,6 @@
     }
 
     html[data-theme="dark"] {
-      /* DARK THEME */
       --bg-main: radial-gradient(circle at top, #020617 0%, #020617 40%, #020617 100%);
       --text-main: #e5e7eb;
       --text-muted: #9ca3af;
@@ -73,7 +71,6 @@
       transition: background 0.25s ease, color 0.25s ease;
     }
 
-    /* Theme toggle */
     .theme-toggle-btn {
       position: fixed;
       top: 10px;
@@ -297,7 +294,6 @@
       line-height: 1.6;
     }
 
-    /* Responsive */
     @media (max-width: 820px) {
       .main-title { font-size: 1.45rem; }
       .main-title i {font-size:1.31rem;}
@@ -367,7 +363,6 @@
     </div>
   </div>
 
-<!-- Shared global theme script – same as other pages -->
 <script>
   (function() {
     const htmlEl = document.documentElement;
@@ -375,7 +370,6 @@
     const prefersDark = window.matchMedia &&
       window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    // initial theme
     if (stored === 'dark' || stored === 'light') {
       htmlEl.setAttribute('data-theme', stored);
     } else {
@@ -427,3 +421,4 @@
 
 </body>
 </html>
+
