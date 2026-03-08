@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,22 +12,51 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
         :root {
+            /* LIGHT THEME */
             --primary-blue: #0078ff;
             --accent-blue: #00bfff;
             --dark-navy: #001f3f;
             --glass-white: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --bg-main: radial-gradient(circle at 20% 20%, #004e92, var(--dark-navy));
+            --header-banner-bg: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            --top-section-bg: #00122e;
+            --search-bg: rgba(255,255,255,0.1);
+            --search-border: rgba(255,255,255,0.2);
+            --bottomnav-bg: rgba(255,255,255,1);
+            --bottomnav-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            --nav-icon-inactive: #aaaaaa;
+            --nav-icon-active: #1877ff;
+        }
+
+        html[data-theme="dark"] {
+            /* DARK THEME */
+            --primary-blue: #60a5ff;
+            --accent-blue: #38bdf8;
+            --dark-navy: #020617;
+            --glass-white: rgba(15, 23, 42, 0.8);
+            --text-main: #e5e7eb;
+            --bg-main: radial-gradient(circle at 20% 20%, #020617, #020617);
+            --header-banner-bg: linear-gradient(90deg, #020617, #111827);
+            --top-section-bg: #020617;
+            --search-bg: rgba(15,23,42,0.9);
+            --search-border: rgba(148,163,184,0.6);
+            --bottomnav-bg: rgba(15,23,42,0.98);
+            --bottomnav-shadow: 0 -10px 30px rgba(0,0,0,0.9);
+            --nav-icon-inactive: #6b7280;
+            --nav-icon-active: #60a5ff;
         }
 
         body {
             margin: 0;
             font-family: 'DM Sans', 'Lato', 'Poppins', Arial, sans-serif;
-            color: #fff;
-            background: radial-gradient(circle at 20% 20%, #004e92, var(--dark-navy));
+            color: var(--text-main);
+            background: var(--bg-main);
             overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            /* Padding removed here to handle space via flexbox instead */
+            transition: background 0.25s ease, color 0.25s ease;
         }
 
         /* Particles */
@@ -38,7 +67,35 @@
             50% { transform: translateY(-80px) scale(1.3); opacity: 0.4; }
         }
 
-        /* --- UPDATED HEADER FOR SCREENSHOT FIDELITY --- */
+        /* Theme toggle button */
+        .theme-toggle-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 200;
+            border-radius: 999px;
+            border: 1px solid rgba(226,232,240,0.65);
+            background: rgba(15,23,42,0.12);
+            color: #f9fafb;
+            padding: 6px 11px;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        html[data-theme="dark"] .theme-toggle-btn {
+            border-color: rgba(148,163,184,0.8);
+            background: rgba(15,23,42,0.7);
+            color: #f9fafb;
+        }
+
+        .theme-toggle-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Header */
         header {
             display: flex;
             flex-direction: column;
@@ -46,18 +103,18 @@
         }
 
         .header-banner {
-            text-align: center; 
-            padding: 12px; 
-            font-size: 1.4em; 
+            text-align: center;
+            padding: 12px;
+            font-size: 1.4em;
             font-weight: 600;
-            background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            background: var(--header-banner-bg);
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        /* --- CONTROLS SECTION (PREVENTS OVERLAP) --- */
+        /* Controls section */
         #top-section {
             width: 100%;
-            background: #00122e; /* Matches dark navy in screenshot */
+            background: var(--top-section-bg);
             backdrop-filter: blur(15px);
             padding: 15px 20px;
             box-sizing: border-box;
@@ -67,22 +124,10 @@
 
         .controls-wrapper {
             display: flex;
-            align-items: center; 
+            align-items: center;
             gap: 12px;
             max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .back-btn {
-            background: #ff5e62; /* Red button from screenshot */
-            color: white;
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
         }
 
         .search-area { flex: 1; }
@@ -90,8 +135,8 @@
         .search-bar-container {
             display: flex;
             align-items: center;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: var(--search-bg);
+            border: 1px solid var(--search-border);
             border-radius: 10px;
             overflow: hidden;
             height: 45px;
@@ -99,12 +144,16 @@
 
         .search-bar-container input {
             flex: 1;
-            padding: 0 15px; 
+            padding: 0 15px;
             background: transparent;
             border: none;
-            color: white;
+            color: var(--text-main);
             outline: none;
             font-size: 0.9rem;
+        }
+
+        .search-bar-container input::placeholder {
+            color: rgba(226,232,240,0.7);
         }
 
         .search-submit-btn {
@@ -117,12 +166,12 @@
             cursor: pointer;
         }
 
-        /* --- MAP CONTAINER --- */
-        #map { 
-            flex: 1; 
-            width: 100%; 
-            background: #f0f0f0; 
-            z-index: 1; /* Lowest layer */
+        /* Map */
+        #map {
+            flex: 1;
+            width: 100%;
+            background: #f0f0f0;
+            z-index: 1;
         }
 
         #busList {
@@ -145,14 +194,14 @@
             font-size: 0.8rem; margin-top: 10px;
         }
 
-        /* --- BOTTOM NAV (REFINED SIZING) --- */
+        /* Bottom nav */
         .bottom-nav {
-            position: relative; /* Changed from fixed to prevent map occlusion */
-            background: rgba(255,255,255,1);
+            position: relative;
+            background: var(--bottomnav-bg);
             display: flex;
             justify-content: space-around;
             padding: 12px 0;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            box-shadow: var(--bottomnav-shadow);
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
             z-index: 100;
@@ -160,19 +209,25 @@
 
         .nav-item {
             text-align: center;
-            color: #aaa;
+            color: var(--nav-icon-inactive);
             text-decoration: none;
             font-size: 0.7rem;
             flex: 1;
         }
 
         .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 2px; }
-        .nav-item.active { color: #1877ff; }
-        
+        .nav-item.active { color: var(--nav-icon-active); }
+        .nav-item.active i { color: var(--nav-icon-active); }
+
         .glow { text-shadow: 0 0 10px var(--accent-blue); }
     </style>
 </head>
 <body>
+
+<button class="theme-toggle-btn" data-theme-toggle-btn type="button">
+    <i class="fas fa-moon" data-theme-icon></i>
+    <span data-theme-label>Dark</span>
+</button>
 
 <div class="particles" id="particles"></div>
 
@@ -183,7 +238,6 @@
     
     <div id="top-section">
         <div class="controls-wrapper">
-            
             <div class="search-area">
                 <div class="search-bar-container">
                     <input type="text" id="searchInput" placeholder="Bus # or Destination..." onkeydown="if(event.key==='Enter') searchBus()">
@@ -349,5 +403,64 @@
     updateBusLocations();
     setInterval(updateBusLocations, 5000);
 </script>
+
+<!-- Shared global theme script – same as other pages -->
+<script>
+  (function() {
+    const htmlEl = document.documentElement;
+    const stored = localStorage.getItem('mmbc-theme');
+    const prefersDark = window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // initial theme
+    if (stored === 'dark' || stored === 'light') {
+      htmlEl.setAttribute('data-theme', stored);
+    } else {
+      htmlEl.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    }
+
+    function setTheme(next) {
+      htmlEl.setAttribute('data-theme', next);
+      localStorage.setItem('mmbc-theme', next);
+    }
+
+    function toggleTheme() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      syncThemeControls();
+    }
+
+    function syncThemeControls() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+
+      document.querySelectorAll('[data-theme-toggle-btn]').forEach(btn => {
+        const icon = btn.querySelector('[data-theme-icon]');
+        const label = btn.querySelector('[data-theme-label]');
+        if (icon) icon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (label) label.textContent = current === 'dark' ? 'Light' : 'Dark';
+      });
+
+      document.querySelectorAll('input[type="checkbox"][data-theme-toggle]').forEach(cb => {
+        cb.checked = current === 'dark';
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-theme-toggle-btn]');
+      if (btn) toggleTheme();
+    });
+
+    document.addEventListener('change', function(e) {
+      const cb = e.target;
+      if (cb.matches('input[type="checkbox"][data-theme-toggle]')) {
+        toggleTheme();
+      }
+    });
+
+    syncThemeControls();
+  })();
+</script>
+
 </body>
 </html>
