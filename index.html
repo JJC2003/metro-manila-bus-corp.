@@ -40,6 +40,7 @@
             color: var(--dark);
         }
 
+        /* subtle background image + tint like other screens */
         body::before {
             content: "";
             position: fixed;
@@ -60,6 +61,7 @@
             pointer-events: none;
         }
 
+        /* top header bar to echo menu style */
         .main-header {
             background: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
             color: #fff;
@@ -119,6 +121,7 @@
             color: #e5efff;
         }
 
+        /* notification toast (unchanged logic, adjusted to layout) */
         #notification-container {
             position: fixed;
             top: 16px;
@@ -162,6 +165,7 @@
         }
         .shake { animation: shake 0.2s ease-in-out; }
 
+        /* main auth container card */
         .page-wrap {
             flex: 1;
             display: flex;
@@ -397,6 +401,7 @@
             <p class="view-title">Sign in to manage your bus trips comfortably.</p>
         </div>
 
+        <!-- LOGIN VIEW -->
         <div id="loginView" class="auth-view active">
             <div class="input-group">
                 <label>Email Address</label>
@@ -426,6 +431,7 @@
             </div>
         </div>
 
+        <!-- FORGOT VIEW -->
         <div id="forgotView" class="auth-view">
             <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 18px;">
                 Enter your email to reset your password.
@@ -444,6 +450,7 @@
             </div>
         </div>
 
+        <!-- SIGNUP VIEW -->
         <div id="signupView" class="auth-view">
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                 <div class="input-group">
