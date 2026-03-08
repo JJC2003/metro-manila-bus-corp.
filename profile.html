@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,33 +7,86 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:400;700&family=Lato:400;700&family=Poppins:400;700;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #f4f7fe;
+            --banner-bg: linear-gradient(90deg, #4a90e2 0%, #63b3ed 100%);
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #4a5568;
+            --tab-bg: #ffffff;
+            --tab-border: rgba(0,0,0,0.05);
+            --tab-active-bg: #4299e1;
+            --tab-active-text: #ffffff;
+            --tab-inactive-text: #718096;
+            --border-subtle: #e2e8f0;
+            --table-header-bg: #edf2f7;
+            --table-header-text: #2d3748;
+            --nav-bg: #ffffff;
+            --nav-border-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+        }
+
+        html[data-theme="dark"] {
+            --bg: #020617;
+            --banner-bg: linear-gradient(90deg, #020617 0%, #1f2937 50%, #0f172a 100%);
+            --card-bg: #0b1220;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --tab-bg: #020617;
+            --tab-border: rgba(15,23,42,0.8);
+            --tab-active-bg: #2563eb;
+            --tab-active-text: #f9fafb;
+            --tab-inactive-text: #9ca3af;
+            --border-subtle: #1f2937;
+            --table-header-bg: #020617;
+            --table-header-text: #e5e7eb;
+            --nav-bg: #020617;
+            --nav-border-shadow: 0 -10px 30px rgba(0,0,0,0.9);
+        }
+
+        * { box-sizing: border-box; }
+
         body {
             font-family: 'DM Sans', 'Lato', 'Poppins', Arial, sans-serif;
-            background: #f4f7fe;
+            background: var(--bg);
             min-height: 120vh;
             line-height: 1.6;
             margin: 0;
             overflow-x: hidden;
-        }
-
-        .logo {
-            font-family: 'Poppins', 'DM Sans';
-            font-size:1.59rem; font-weight:900; color:#3965ff; letter-spacing:2px; display:flex;align-items:center;gap:10px;
+            color: var(--text-main);
+            transition: background 0.25s ease, color 0.25s ease;
         }
 
         .profile-wrapper {
-            margin-top: 80px; 
+            margin-top: 80px;
             width: 100%;
         }
 
         .blue-banner {
-            background: linear-gradient(90deg, #4a90e2 0%, #63b3ed 100%);
+            background: var(--banner-bg);
             height: 180px;
             width: 100%;
             position: relative;
             display: flex;
             justify-content: center;
         }
+
+        .theme-toggle-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            border-radius: 999px;
+            border: 1px solid rgba(226,232,240,0.65);
+            background: rgba(15,23,42,0.3);
+            color: #f9fafb;
+            padding: 6px 11px;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .theme-toggle-btn i { font-size: 0.9rem; }
 
         .avatar-container {
             position: absolute;
@@ -79,10 +132,10 @@
 
         .profile-tabs {
             display: flex;
-            background: white;
+            background: var(--tab-bg);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px var(--tab-border);
             margin-bottom: 25px;
         }
 
@@ -92,7 +145,7 @@
             text-align: center;
             cursor: pointer;
             transition: 0.3s;
-            color: #718096;
+            color: var(--tab-inactive-text);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -103,16 +156,19 @@
         }
 
         .tab-item i { font-size: 1.2rem; }
+
         .tab-item.active {
-            background: #4299e1;
-            color: white;
+            background: var(--tab-active-bg);
+            color: var(--tab-active-text);
         }
 
         .info-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 40px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            color: var(--text-main);
+            border: 1px solid var(--border-subtle);
         }
 
         .info-card h3 {
@@ -121,7 +177,7 @@
             align-items: center;
             gap: 10px;
             font-family: 'Poppins';
-            color: #2d3748;
+            color: var(--text-main);
             font-size: 1.4rem;
         }
 
@@ -146,15 +202,17 @@
         .info-group input {
             width: 100%;
             padding: 8px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-subtle);
             border-radius: 5px;
             font-size: 0.9rem;
             text-align: center;
+            background: var(--card-bg);
+            color: var(--text-main);
         }
 
         .info-group p {
             margin: 0;
-            color: #4a5568;
+            color: var(--text-muted);
             font-weight: 400;
         }
 
@@ -199,9 +257,11 @@
 
         .security-form input {
             padding: 10px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-subtle);
             border-radius: 5px;
             font-size: 0.9rem;
+            background: var(--card-bg);
+            color: var(--text-main);
         }
 
         .change-btn {
@@ -228,22 +288,23 @@
         }
 
         .transactions-table th, .transactions-table td {
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-subtle);
             padding: 12px;
             text-align: center;
             font-family: 'DM Sans';
+            color: var(--text-main);
         }
 
         .transactions-table th {
-            background: #edf2f7;
+            background: var(--table-header-bg);
             font-weight: 800;
-            color: #2d3748;
+            color: var(--table-header-text);
         }
 
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: white; display: flex; justify-content: space-around;
-            padding: 10px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            background: var(--nav-bg); display: flex; justify-content: space-around;
+            padding: 10px 0; box-shadow: var(--nav-border-shadow);
             border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 100;
         }
         .nav-item { text-align: center; color: #aaa; text-decoration: none; font-size: 0.7rem; flex: 1; }
@@ -251,12 +312,8 @@
         .nav-item.active { color: #3965ff; }
 
         @media (max-width: 768px) {
-            .profile-wrapper {
-                margin-top: 60px;
-            }
-            .blue-banner {
-                height: 150px;
-            }
+            .profile-wrapper { margin-top: 60px; }
+            .blue-banner { height: 150px; }
             .avatar-container {
                 width: 120px;
                 height: 120px;
@@ -271,42 +328,26 @@
                 margin: 60px auto 100px;
                 padding: 0 15px;
             }
-            .profile-tabs {
-                flex-direction: column;
-            }
+            .profile-tabs { flex-direction: column; }
             .tab-item {
                 padding: 15px;
                 font-size: 0.8rem;
             }
-            .tab-item i {
-                font-size: 1rem;
-            }
-            .info-card {
-                padding: 20px;
-            }
-            .info-card h3 {
-                font-size: 1.2rem;
-            }
+            .tab-item i { font-size: 1rem; }
+            .info-card { padding: 20px; }
+            .info-card h3 { font-size: 1.2rem; }
             .info-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 20px;
             }
-            .info-group label {
-                font-size: 0.8rem;
-            }
-            .info-group input {
-                font-size: 0.8rem;
-            }
-            .info-group p {
-                font-size: 0.9rem;
-            }
+            .info-group label { font-size: 0.8rem; }
+            .info-group input { font-size: 0.8rem; }
+            .info-group p { font-size: 0.9rem; }
             .edit-btn, .save-btn {
                 padding: 10px 20px;
                 font-size: 0.9rem;
             }
-            .security-form {
-                gap: 15px;
-            }
+            .security-form { gap: 15px; }
             .transactions-table th, .transactions-table td {
                 padding: 8px;
                 font-size: 0.8rem;
@@ -314,9 +355,7 @@
         }
 
         @media (max-width: 480px) {
-            .blue-banner {
-                height: 120px;
-            }
+            .blue-banner { height: 120px; }
             .avatar-container {
                 width: 100px;
                 height: 100px;
@@ -327,16 +366,12 @@
                 height: 24px;
                 font-size: 0.6rem;
             }
-            .main-content {
-                padding: 0 10px;
-            }
+            .main-content { padding: 0 10px; }
             .info-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-            .info-card h3 {
-                font-size: 1.1rem;
-            }
+            .info-card h3 { font-size: 1.1rem; }
             .tab-item {
                 padding: 12px;
                 font-size: 0.75rem;
@@ -345,12 +380,8 @@
                 padding: 8px 15px;
                 font-size: 0.8rem;
             }
-            .security-form {
-                gap: 10px;
-            }
-            .transactions-table {
-                font-size: 0.7rem;
-            }
+            .security-form { gap: 10px; }
+            .transactions-table { font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -358,10 +389,14 @@
 
 <div class="profile-wrapper">
     <div class="blue-banner">
+        <button class="theme-toggle-btn" data-theme-toggle-btn>
+            <i class="fas fa-moon" data-theme-icon></i>
+            <span data-theme-label>Dark</span>
+        </button>
+
         <div class="avatar-container">
             <img id="profileDisplay" src="https://www.w3schools.com/howto/img_avatar.png" alt="Profile Picture">
             <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
-            
             <div class="camera-icon" onclick="triggerFileInput()">
                 <i class="fas fa-camera"></i>
             </div>
@@ -370,15 +405,15 @@
 
     <div class="main-content">
         <div class="profile-tabs">
-            <div class="tab-item active" onclick="showTab('personal')">
+            <div class="tab-item active" onclick="showTab('personal', this)">
                 <i class="fas fa-user"></i>
                 Personal Info
             </div>
-            <div class="tab-item" onclick="showTab('security')">
+            <div class="tab-item" onclick="showTab('security', this)">
                 <i class="fas fa-shield-alt"></i>
                 Security
             </div>
-            <div class="tab-item" onclick="showTab('transactions')">
+            <div class="tab-item" onclick="showTab('transactions', this)">
                 <i class="fas fa-receipt"></i>
                 Transactions
             </div>
@@ -386,7 +421,6 @@
 
         <div id="personal" class="info-card">
             <h3><i class="fas fa-user-edit"></i> Personal Information</h3>
-            
             <div class="info-grid">
                 <div class="info-group">
                     <label>First Name</label>
@@ -420,8 +454,8 @@
 
         <div id="security" class="info-card" style="display:none;">
             <h3><i class="fas fa-shield-alt"></i> Account Security</h3>
-            <p style="color:#718096;margin-bottom:20px;">Manage your account security settings and password.</p>
-            
+            <p style="color:var(--text-muted);margin-bottom:20px;">Manage your account security settings and password.</p>
+
             <form class="security-form" onsubmit="changePassword(event)">
                 <div class="form-group">
                     <label>Current Password</label>
@@ -443,7 +477,6 @@
 
         <div id="transactions" class="info-card" style="display:none;">
             <h3><i class="fas fa-receipt"></i> Transaction History</h3>
-            
             <table class="transactions-table">
                 <tr>
                     <th>Date</th>
@@ -498,12 +531,10 @@
 </nav>
 
 <script>
-    // 1. Function to open the hidden file selector
     function triggerFileInput() {
         document.getElementById('imageInput').click();
     }
 
-    // 2. Function to handle the image selection and preview
     function previewImage(event) {
         const file = event.target.files[0];
         if (file) {
@@ -515,61 +546,10 @@
         }
     }
 
-    // 3. Tab switching logic
     function showTab(tabId, element) {
         document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.info-card').forEach(c => c.style.display = 'none');
-        
-        element.classList.add('active');
-        document.getElementById(tabId).style.display = 'block';
-    }
-
-    // 4. Edit mode logic
-    function enableEdit() {
-        document.querySelectorAll('.info-group p').forEach(p => p.style.display = 'none');
-        document.querySelectorAll('.info-group input').forEach(input => input.style.display = 'block');
-        document.querySelector('.edit-btn').style.display = 'none';
-        document.querySelector('.save-btn').style.display = 'inline-flex';
-    }
-
-    function saveChanges() {
-        const firstName = document.getElementById('firstNameInput').value;
-        const lastName = document.getElementById('lastNameInput').value;
-        const email = document.getElementById('emailInput').value;
-        const mobile = document.getElementById('mobileInput').value;
-
-        document.getElementById('firstName').textContent = firstName;
-        document.getElementById('lastName').textContent = lastName;
-        document.getElementById('email').textContent = email;
-        document.getElementById('mobile').textContent = mobile;
-
-        document.querySelectorAll('.info-group p').forEach(p => p.style.display = 'block');
-        document.querySelectorAll('.info-group input').forEach(input => input.style.display = 'none');
-        document.querySelector('.edit-btn').style.display = 'inline-flex';
-        document.querySelector('.save-btn').style.display = 'none';
-
-        alert('Changes saved successfully!');
-    }
-
-    function changePassword(event) {
-        event.preventDefault();
-        const current = document.getElementById('currentPassword').value;
-        const newPass = document.getElementById('newPassword').value;
-        const confirm = document.getElementById('confirmPassword').value;
-
-        if (newPass !== confirm) {
-            alert('New passwords do not match!');
-            return;
-        }
-
-        alert('Password successfully changed!');
-        document.getElementById('currentPassword').value = '';
-        document.getElementById('newPassword').value =
-        document.getElementById('confirmPassword').value = '';
-    function showTab(tabId) {
-        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.info-card').forEach(c => c.style.display = 'none');
-        document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
+        if (element) element.classList.add('active');
         document.getElementById(tabId).style.display = 'block';
     }
 
@@ -615,10 +595,63 @@
         document.getElementById('newPassword').value = '';
         document.getElementById('confirmPassword').value = '';
     }
-
-    function changeAvatar() {
-        alert('Avatar change feature coming soon!');
-    }
-  }
 </script>
 
+<script>
+  (function() {
+    const htmlEl = document.documentElement;
+    const stored = localStorage.getItem('mmbc-theme');
+    const prefersDark = window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (stored === 'dark' || stored === 'light') {
+      htmlEl.setAttribute('data-theme', stored);
+    } else {
+      htmlEl.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    }
+
+    function setTheme(next) {
+      htmlEl.setAttribute('data-theme', next);
+      localStorage.setItem('mmbc-theme', next);
+    }
+
+    function toggleTheme() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      syncThemeControls();
+    }
+
+    function syncThemeControls() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+
+      document.querySelectorAll('[data-theme-toggle-btn]').forEach(btn => {
+        const icon = btn.querySelector('[data-theme-icon]');
+        const label = btn.querySelector('[data-theme-label]');
+        if (icon) icon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (label) label.textContent = current === 'dark' ? 'Light' : 'Dark';
+      });
+
+      document.querySelectorAll('input[type="checkbox"][data-theme-toggle]').forEach(cb => {
+        cb.checked = current === 'dark';
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-theme-toggle-btn]');
+      if (btn) toggleTheme();
+    });
+
+    document.addEventListener('change', function(e) {
+      const cb = e.target;
+      if (cb.matches('input[type="checkbox"][data-theme-toggle]')) {
+        toggleTheme();
+      }
+    });
+
+    syncThemeControls();
+  })();
+</script>
+
+</body>
+</html>
