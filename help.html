@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <title>MMBC Help & FAQ</title>
@@ -9,18 +9,103 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@700;400&family=Lato:wght@700;400&family=Poppins:wght@900;700;400&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      /* LIGHT THEME */
+      --bg-main: linear-gradient(120deg, #eaf6ff 0%, #e0e5ff 100%);
+      --text-main: #213253;
+      --text-muted: #4b5563;
+      --primary: #3965ff;
+      --primary-soft: #e8f3ff;
+      --accent: #4ab5fc;
+      --header-bg: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
+      --header-title: #ffffff;
+      --header-sub: #eaf1fc;
+      --header-icon: #ffe66c;
+      --back-link: #dde5fc;
+      --back-link-hover: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: #b8d2ff33;
+      --card-shadow: 0 6px 32px rgba(10,179,255,0.09);
+      --card-shadow-hover: 0 9px 40px #3ea6ff60;
+      --chat-bg: rgba(226,239,255,0.90);
+      --chat-border: #bddfffac;
+      --faq-border-left: #e0e7ef;
+      --faq-question: #19419b;
+      --faq-answer: #204484;
+      --typing-bg: #e8f3ff;
+      --bottom-spacing: 40px;
+    }
+
+    html[data-theme="dark"] {
+      /* DARK THEME */
+      --bg-main: radial-gradient(circle at top, #020617 0%, #020617 40%, #020617 100%);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --primary: #60a5ff;
+      --primary-soft: #0b1120;
+      --accent: #38bdf8;
+      --header-bg: linear-gradient(90deg, #020617 0%, #111827 120%);
+      --header-title: #f9fafb;
+      --header-sub: #9ca3af;
+      --header-icon: #fde68a;
+      --back-link: #9ca3af;
+      --back-link-hover: #f9fafb;
+      --card-bg: rgba(15,23,42,0.98);
+      --card-border: #1f2937;
+      --card-shadow: 0 18px 40px rgba(0,0,0,0.75);
+      --card-shadow-hover: 0 22px 50px rgba(0,0,0,0.9);
+      --chat-bg: rgba(15,23,42,0.96);
+      --chat-border: #1f2937;
+      --faq-border-left: #1f2937;
+      --faq-question: #e5e7eb;
+      --faq-answer: #cbd5f5;
+      --typing-bg: #020617;
+      --bottom-spacing: 32px;
+    }
+
     body {
       font-family: 'DM Sans', 'Lato', 'Poppins', Arial, sans-serif;
-      background: linear-gradient(120deg, #eaf6ff 0%, #e0e5ff 100%);
-      color: #213253;
+      background: var(--bg-main);
+      color: var(--text-main);
       min-height: 100vh;
       margin: 0;
       overflow-x: hidden;
       position: relative;
+      padding-bottom: var(--bottom-spacing);
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
+    /* Theme toggle button */
+    .theme-toggle-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 200;
+      border-radius: 999px;
+      border: 1px solid rgba(226,232,240,0.65);
+      background: rgba(15,23,42,0.12);
+      color: #f9fafb;
+      padding: 6px 11px;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    html[data-theme="dark"] .theme-toggle-btn {
+      border-color: rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.7);
+      color: #f9fafb;
+    }
+
+    .theme-toggle-btn i {
+      font-size: 0.9rem;
+    }
+
+    /* header similar to rates/main pages */
     .main-header {
-      background: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
+      background: var(--header-bg);
       color: #fff;
       text-align: center;
       padding: 32px 0 24px 0;
@@ -35,14 +120,14 @@
       position: absolute;
       left: 20px;
       top: 26px;
-      color: #dde5fc;
+      color: var(--back-link);
       font-size: 1.4rem;
       text-decoration: none;
       z-index: 2;
       transition: color 0.2s;
     }
 
-    .main-header a:hover { color: #fff; }
+    .main-header a:hover { color: var(--back-link-hover); }
 
     .main-title {
       font-family: 'Poppins', Arial, sans-serif;
@@ -59,7 +144,7 @@
 
     .main-title i {
       font-size: 1.8rem;
-      color: #ffe66c;
+      color: var(--header-icon);
       filter: drop-shadow(0 0 3px #1c4980);
     }
 
@@ -67,7 +152,7 @@
       font-size: 0.98rem;
       margin: 0;
       font-weight: 500;
-      color: #eaf1fc;
+      color: var(--header-sub);
       font-family: 'Lato', Arial, sans-serif;
       text-shadow: 0 1px 6px #2d3c731a;
     }
@@ -85,19 +170,19 @@
 
     .glass-card {
       backdrop-filter: blur(8px);
-      background: rgba(255, 255, 255, 0.9);
+      background: var(--card-bg);
       border-radius: 17px;
-      box-shadow: 0 6px 32px rgba(10,179,255,0.09);
+      box-shadow: var(--card-shadow);
       padding: 22px 20px 20px;
-      color: #253161;
+      color: var(--text-main);
       font-size: 0.98rem;
       line-height: 1.6;
-      border: 1.5px solid #b8d2ff33;
-      transition: box-shadow 0.2s;
+      border: 1.5px solid var(--card-border);
+      transition: box-shadow 0.2s, background 0.25s ease, border-color 0.25s ease;
     }
 
     .glass-card:hover {
-      box-shadow: 0 9px 40px #3ea6ff60;
+      box-shadow: var(--card-shadow-hover);
     }
 
     h2 {
@@ -106,15 +191,16 @@
       font-size:1.1rem;
       font-weight:800;
       letter-spacing: 0.12rem;
-      color:#3965ff;
+      color: var(--primary);
       display:flex;
       align-items:center;
       gap:8px;
     }
 
+    /* assistant area */
     .assistant-header {
       font-family: 'Poppins', 'DM Sans';
-      color: #3965ff;
+      color: var(--primary);
       font-weight: 700;
       font-size: 0.98rem;
       letter-spacing: 0.04rem;
@@ -125,12 +211,12 @@
     }
 
     .chat-window {
-      background: rgba(226,239,255,0.90);
+      background: var(--chat-bg);
       border-radius: 14px;
       padding: 10px;
       max-height: 260px;
       overflow-y: auto;
-      border: 1px solid #bddfffac;
+      border: 1px solid var(--chat-border);
       margin-bottom: 8px;
     }
 
@@ -145,7 +231,7 @@
       border-radius: 18px;
       font-size: 0.95rem;
       box-shadow: 0 2px 11px #bddfff45;
-      color: #213253;
+      color: var(--text-main);
       white-space: pre-wrap;
       line-height: 1.45;
       position: relative;
@@ -165,13 +251,18 @@
       border-top-left-radius: 13px;
     }
 
+    html[data-theme="dark"] .bot .bubble {
+      background: linear-gradient(80deg, #020617 40%, #0f172a 100%);
+      box-shadow: 0 4px 18px rgba(15,23,42,0.8);
+    }
+
     .typing {
       display: inline-block;
-      background: #e8f3ff;
+      background: var(--typing-bg);
       border-radius: 11px;
       padding: 6px 11px;
       font-size: 0.88rem;
-      color: #213253;
+      color: var(--text-main);
       font-style: italic;
       letter-spacing: 0.5px;
     }
@@ -191,12 +282,22 @@
       font-size: 0.96rem;
       background: rgba(241,244,250,0.9);
       transition: border .21s, background .21s;
+      color: var(--text-main);
+    }
+
+    html[data-theme="dark"] .assistant-box input[type="text"] {
+      background: #020617;
+      border-color: #1f2937;
     }
 
     .assistant-box input[type="text"]:focus {
-      border-color: #3965ff;
+      border-color: var(--primary);
       outline: none;
       background: rgba(255,255,255,0.96);
+    }
+
+    html[data-theme="dark"] .assistant-box input[type="text"]:focus {
+      background: #020617;
     }
 
     .assistant-box button {
@@ -223,6 +324,7 @@
       transform: translateY(-1px);
     }
 
+    /* FAQ section styled like a second card */
     .faq-section {
       padding: 20px 18px 14px;
     }
@@ -231,7 +333,7 @@
       font-family:'DM Sans','Lato';
       font-size:1.02rem;
       font-weight:700;
-      color:#3965ff;
+      color: var(--primary);
       letter-spacing:.08rem;
       margin-bottom:10px;
       display:flex;
@@ -250,7 +352,7 @@
       font-weight: 700;
       margin: 12px 0 0;
       font-size: 0.98rem;
-      color: #19419b;
+      color: var(--faq-question);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -262,8 +364,8 @@
       transition: color .19s;
     }
 
-    .faq-q .fa-question-circle {color: #4ab5fc;}
-    .faq-q.active, .faq-q:focus { color: #3965ff; }
+    .faq-q .fa-question-circle {color: var(--accent);}
+    .faq-q.active, .faq-q:focus { color: var(--primary); }
 
     .faq-anim {
       transition: transform .22s;
@@ -278,8 +380,8 @@
       opacity: 0;
       margin-bottom: 3px;
       padding-left: 24px;
-      color: #204484;
-      border-left: 2px solid #e0e7ef;
+      color: var(--faq-answer);
+      border-left: 2px solid var(--faq-border-left);
       font-weight: 400;
       font-size: 0.95rem;
       transform: translateY(8px);
@@ -303,6 +405,11 @@
   </style>
 </head>
 <body>
+
+<button class="theme-toggle-btn" data-theme-toggle-btn type="button">
+  <i class="fas fa-moon" data-theme-icon></i>
+  <span data-theme-label>Dark</span>
+</button>
 
   <div class="main-header">
     <a href="main.html" title="Back to Home"><i class="fas fa-circle-left"></i></a>
@@ -352,6 +459,7 @@
   </div>
 
 <script>
+  // FAQ toggle
   document.querySelectorAll(".faq-q").forEach(button => {
     button.addEventListener("click", function(){
       this.classList.toggle("active");
@@ -375,6 +483,7 @@
     });
   });
 
+  // Assistant chat
   const form = document.getElementById("assistantForm");
   const input = document.getElementById("userQuestion");
   const chatWindow = document.getElementById("chatWindow");
@@ -430,5 +539,64 @@
     }
   });
 </script>
+
+<!-- Shared global theme script – same as other pages -->
+<script>
+  (function() {
+    const htmlEl = document.documentElement;
+    const stored = localStorage.getItem('mmbc-theme');
+    const prefersDark = window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // initial theme
+    if (stored === 'dark' || stored === 'light') {
+      htmlEl.setAttribute('data-theme', stored);
+    } else {
+      htmlEl.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    }
+
+    function setTheme(next) {
+      htmlEl.setAttribute('data-theme', next);
+      localStorage.setItem('mmbc-theme', next);
+    }
+
+    function toggleTheme() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      syncThemeControls();
+    }
+
+    function syncThemeControls() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+
+      document.querySelectorAll('[data-theme-toggle-btn]').forEach(btn => {
+        const icon = btn.querySelector('[data-theme-icon]');
+        const label = btn.querySelector('[data-theme-label]');
+        if (icon) icon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (label) label.textContent = current === 'dark' ? 'Light' : 'Dark';
+      });
+
+      document.querySelectorAll('input[type="checkbox"][data-theme-toggle]').forEach(cb => {
+        cb.checked = current === 'dark';
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-theme-toggle-btn]');
+      if (btn) toggleTheme();
+    });
+
+    document.addEventListener('change', function(e) {
+      const cb = e.target;
+      if (cb.matches('input[type="checkbox"][data-theme-toggle]')) {
+        toggleTheme();
+      }
+    });
+
+    syncThemeControls();
+  })();
+</script>
+
 </body>
 </html>
