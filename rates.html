@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -16,7 +17,6 @@
     overflow-x: hidden;
     position: relative;
   }
-  #busBg { position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
 
   .main-header {
     background: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
@@ -90,7 +90,7 @@
   .glass-card:hover { box-shadow: 0 9px 40px #3ea6ff60; }
 
   h2 {
-    margin-top: 50pxs;
+    margin-top: 50px;
     text-align: center;
     font-family: 'Montserrat', Arial, sans-serif;
     font-weight: 700;
@@ -137,10 +137,9 @@
 </style>
 </head>
 <body>
-<canvas id="busBg"></canvas>
 
 <div class="main-header">
-  <a href="main.php" title="Back to Home"><i class="fas fa-circle-left"></i></a>
+  <a href="main.html" title="Back to Home"><i class="fas fa-circle-left"></i></a>
   <div class="main-title"><i class="fas fa-bus"></i> MMBC · Bus Rates</div>
   <div class="subtitle">Check current fares across all routes</div>
 </div>
@@ -187,117 +186,5 @@
   </div>
 </div>
 
-<script>
-const busCanvas = document.getElementById('busBg');
-const busCtx = busCanvas.getContext('2d');
-function resizeBusCanvas() {
-    busCanvas.width = window.innerWidth;
-    busCanvas.height = window.innerHeight;
-}
-resizeBusCanvas();
-window.addEventListener('resize', resizeBusCanvas);
-
-let busAnim = [
-    {x:-70, y:98, speed:2.1, t:0},
-    {x:-220, y:185, speed:1.7, t:120},
-    {x:-500, y:52, speed:1.8, t:60}
-];
-function drawRoad(ctx, W, H) {
-    ctx.save();
-    ctx.strokeStyle = "#b9dfff";
-    ctx.lineWidth = 9;
-    ctx.setLineDash([42,40]);
-    ctx.beginPath();
-    ctx.moveTo(0, H*0.17);
-    ctx.lineTo(W, H*0.17+16*Math.sin(Date.now()/1800));
-    ctx.moveTo(0, H*0.26);
-    ctx.lineTo(W, H*0.26-10*Math.sin(Date.now()/1750));
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.restore();
-}
-function drawWheels(ctx, x, y) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(x, y, 7.3, 0, Math.PI*2);
-    ctx.fillStyle="#323374";
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x, y, 3.7+2*Math.abs(Math.sin(Date.now()/720)), 0, Math.PI*2);
-    ctx.fillStyle="#8beefd";
-    ctx.fill();
-    ctx.restore();
-}
-function drawHeadlights(ctx, x, y, flicker) {
-    ctx.save();
-    ctx.globalAlpha=0.21+0.3*Math.abs(Math.cos(Date.now()/290+flicker));
-    ctx.beginPath();
-    ctx.ellipse(x+38, y-7.5, 17, 7, 0, 0, Math.PI*2);
-    ctx.fillStyle="#ffffb5";
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(x+38, y+7.5, 17, 7, 0, 0, Math.PI*2);
-    ctx.fillStyle="#ffffb5";
-    ctx.fill();
-    ctx.globalAlpha=1;
-    ctx.restore();
-}
-function drawBusSimple(ctx, x, y, t, idx) {
-    ctx.save();
-    ctx.translate(x,y);
-    ctx.rotate(0.03*Math.sin(t/53+idx));
-    ctx.globalAlpha = .095;
-    ctx.beginPath();
-    ctx.ellipse(13,18,38,7,0,0,Math.PI*2);
-    ctx.fillStyle="#1877ff";
-    ctx.fill();
-    ctx.globalAlpha = 1;
-    ctx.fillStyle="#1877ff";
-    ctx.fillRect(-11,-14,51,27);
-    ctx.fillStyle="#eafffa";
-    ctx.fillRect(7,-11,19,17);
-    drawWheels(ctx,-6,14);
-    drawWheels(ctx,30,14);
-    drawHeadlights(ctx,16,0,idx*8+t/140);
-    ctx.beginPath();
-    ctx.ellipse(-2,-16,11,4,0,0,Math.PI*2);
-    ctx.fillStyle="#6e6df9";
-    ctx.globalAlpha=.8+.1*Math.sin(t/81+idx);
-    ctx.fill();
-    ctx.globalAlpha=1;
-    ctx.restore();
-}
-let bubbles = Array.from({length:11}).map((_,i)=>({
-    x: Math.random(), y: Math.random(), r: 14+16*Math.random(),
-    dx: 0.09+0.15*Math.random(), dy: 0.03+0.04*Math.random(),
-    c: ["#8beefd77","#53e3b877","#6e6df966"][i%3]
-}));
-function drawBubbles(ctx,W,H) {
-    for(let b of bubbles){
-        ctx.beginPath();
-        ctx.arc(b.x*W, b.y*H, b.r,0,Math.PI*2);
-        ctx.fillStyle = b.c;
-        ctx.globalAlpha=.4+.1*Math.sin(Date.now()/2200+b.x+b.y);
-        ctx.fill();
-        b.x+=b.dx/W; b.y+=b.dy/H;
-        if(b.x>1) b.x=0; if(b.y>1) b.y=0;
-    }
-    ctx.globalAlpha=1;
-}
-function animBusBg(){
-    let W=busCanvas.width,H=busCanvas.height;
-    busCtx.clearRect(0,0,W,H);
-    drawRoad(busCtx, W,H);
-    drawBubbles(busCtx,W,H);
-    for(let i=0;i<busAnim.length;i++){
-        let b=busAnim[i];
-        drawBusSimple(busCtx, b.x, b.y+Math.sin(Date.now()/500+i*8)*2, Date.now()/21+b.t,i);
-        b.x += b.speed;
-        if(b.x>W+60){ b.x = -100-(Math.random()*160);  b.y = 38+Math.random()*H*0.32; }
-    }
-    requestAnimationFrame(animBusBg);
-}
-animBusBg();
-</script>
 </body>
 </html>
