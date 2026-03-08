@@ -1,6 +1,5 @@
-
- <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <title>MMBC Bus Rates</title>
@@ -8,28 +7,76 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400|Roboto:400,500&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --primary: #176BFF;
+    --secondary: #2F9BFF;
+    --accent: #FFC94A;
+    --bg: linear-gradient(120deg, #eaf6ff 0%, #e0e5ff 100%);
+    --header-bg: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
+    --text-main: #24346e;
+    --text-muted: #4B5563;
+    --card-bg: rgba(255,255,255,0.68);
+    --rate-card-bg: rgba(245,252,255,0.85);
+    --rate-card-border: #b5eaff33;
+    --glass-border: #b8d2ff33;
+    --table-header-bg: #dce4f7;
+    --table-row-bg: rgba(255,255,255,0.9);
+    --table-row-border: #cfd8ef;
+    --shadow-header: 0 4px 24px rgba(32,50,84,0.14);
+    --shadow-card: 0 6px 32px rgba(10,179,255,0.09);
+    --shadow-card-hover: 0 9px 40px #3ea6ff60;
+    --shadow-rate: 0 4px 20px rgba(32,50,84,0.08);
+    --shadow-rate-hover: 0 8px 28px rgba(32,50,84,0.11);
+  }
+
+  html[data-theme="dark"] {
+    --primary: #60a5ff;
+    --secondary: #38bdf8;
+    --accent: #fbbf24;
+    --bg: radial-gradient(circle at top, #020617 0%, #020617 40%, #020617 100%);
+    --header-bg: linear-gradient(90deg, #020617 0%, #1f2937 50%, #0f172a 100%);
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+    --card-bg: rgba(15,23,42,0.96);
+    --rate-card-bg: rgba(15,23,42,0.98);
+    --rate-card-border: #1f2937;
+    --glass-border: #1f2937;
+    --table-header-bg: #111827;
+    --table-row-bg: #020617;
+    --table-row-border: #1f2937;
+    --shadow-header: 0 4px 26px rgba(0,0,0,0.85);
+    --shadow-card: 0 18px 40px rgba(0,0,0,0.75);
+    --shadow-card-hover: 0 22px 50px rgba(0,0,0,0.9);
+    --shadow-rate: 0 12px 32px rgba(0,0,0,0.75);
+    --shadow-rate-hover: 0 16px 40px rgba(0,0,0,0.95);
+  }
+
+  * { box-sizing: border-box; }
+
   body {
     font-family: 'Roboto', 'Montserrat', Arial, sans-serif;
-    background: linear-gradient(120deg, #eaf6ff 0%, #e0e5ff 100%);
-    color: #24346e;
+    background: var(--bg);
+    color: var(--text-main);
     margin: 0;
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
+    transition: background 0.25s ease, color 0.25s ease;
   }
 
   .main-header {
-    background: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
+    background: var(--header-bg);
     color: #fff;
     text-align: center;
     padding: 45px 0 34px 0;
     position: relative;
-    box-shadow: 0 4px 24px rgba(32,50,84,0.14);
+    box-shadow: var(--shadow-header);
     z-index: 2;
     border-bottom-left-radius: 24px;
     border-bottom-right-radius: 24px;
   }
-  .main-header a {
+
+  .main-header a.back-link {
     position: absolute;
     left: 20px;
     top: 45px;
@@ -39,7 +86,26 @@
     z-index: 2;
     transition: color 0.2s;
   }
-  .main-header a:hover { color: #fff; }
+  .main-header a.back-link:hover { color: #fff; }
+
+  .theme-toggle-btn {
+    position: absolute;
+    right: 20px;
+    top: 45px;
+    border-radius: 999px;
+    border: 1px solid rgba(226,232,240,0.65);
+    background: rgba(15,23,42,0.18);
+    color: #f9fafb;
+    padding: 6px 11px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .theme-toggle-btn i { font-size: 0.9rem; }
+
   .main-title {
     font-family: 'Montserrat', Arial, sans-serif;
     font-size: 2.3rem;
@@ -52,7 +118,12 @@
     justify-content: center;
     gap: 12px;
   }
-  .main-title i { font-size: 2.1rem; color: #ffe66c; filter: drop-shadow(0 0 3px #1c4980); }
+  .main-title i {
+    font-size: 2.1rem;
+    color: #ffe66c;
+    filter: drop-shadow(0 0 3px #1c4980);
+  }
+
   .subtitle {
     font-size: 1.1rem;
     margin: 0;
@@ -75,19 +146,19 @@
 
   .glass-card {
     backdrop-filter: blur(8px);
-    background: rgba(255,255,255,0.68);
+    background: var(--card-bg);
     border-radius: 17px;
-    box-shadow: 0 6px 32px rgba(10,179,255,0.09);
+    box-shadow: var(--shadow-card);
     padding: 28px 22px;
-    color: #253161;
+    color: var(--text-main);
     font-size: 1.05rem;
     line-height: 1.7;
     z-index: 2;
     position: relative;
-    transition: box-shadow 0.2s;
-    border: 1.5px solid #b8d2ff33;
+    transition: box-shadow 0.2s, background 0.2s;
+    border: 1.5px solid var(--glass-border);
   }
-  .glass-card:hover { box-shadow: 0 9px 40px #3ea6ff60; }
+  .glass-card:hover { box-shadow: var(--shadow-card-hover); }
 
   h2 {
     margin-top: 50px;
@@ -95,7 +166,7 @@
     font-family: 'Montserrat', Arial, sans-serif;
     font-weight: 700;
     font-size: 1.25rem;
-    color: #193060;
+    color: var(--text-main);
     margin-bottom: 16px;
   }
 
@@ -109,37 +180,75 @@
   .rate-card {
     flex: 1 1 220px;
     min-width: 200px;
-    background: rgba(245,252,255,0.85);
+    background: var(--rate-card-bg);
     border-radius: 16px;
     padding: 20px 15px;
-    box-shadow: 0 4px 20px rgba(32,50,84,0.08);
-    border: 1px solid #b5eaff33;
+    box-shadow: var(--shadow-rate);
+    border: 1px solid var(--rate-card-border);
     text-align: center;
-    transition: transform 0.15s, box-shadow 0.18s;
+    transition: transform 0.15s, box-shadow 0.18s, background 0.18s;
   }
-  .rate-card:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 28px rgba(32,50,84,0.11); }
-  .rate-card h3 { font-family: 'Montserrat', Arial, sans-serif; color: #1c4980; margin-bottom: 12px; font-size: 1.05rem; }
-  .rates-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
-  .rates-table th { background: #dce4f7; color: #1c4980; padding: 8px 0; font-weight: 600; }
-  .rates-table td { padding: 6px 0; color: #24346e; background: rgba(255,255,255,0.9); }
-  .rates-table tr:not(:last-child) td { border-bottom: 1px solid #cfd8ef; }
+  .rate-card:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-rate-hover);
+  }
 
-  .additional h3 { color: #1c4980; margin-bottom: 8px; font-family: 'Montserrat', Arial, sans-serif; }
-  .additional p { margin-bottom: 10px; color: #24346e; font-size: 1rem; }
+  .rate-card h3 {
+    font-family: 'Montserrat', Arial, sans-serif;
+    color: var(--text-main);
+    margin-bottom: 12px;
+    font-size: 1.05rem;
+  }
+
+  .rates-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.98rem;
+  }
+  .rates-table th {
+    background: var(--table-header-bg);
+    color: var(--text-main);
+    padding: 8px 0;
+    font-weight: 600;
+  }
+  .rates-table td {
+    padding: 6px 0;
+    color: var(--text-main);
+    background: var(--table-row-bg);
+  }
+  .rates-table tr:not(:last-child) td {
+    border-bottom: 1px solid var(--table-row-border);
+  }
+
+  .additional h3 {
+    color: var(--text-main);
+    margin-bottom: 8px;
+    font-family: 'Montserrat', Arial, sans-serif;
+  }
+  .additional p {
+    margin-bottom: 10px;
+    color: var(--text-main);
+    font-size: 1rem;
+  }
 
   @media (max-width: 700px) {
     .rates-section { flex-direction: column; gap: 16px; }
     .rate-card { min-width: 140px; }
     .container { padding: 15px 8px; }
     .main-header { padding: 23px 0 17px 0; }
-    .main-header a { top: 13px; left: 7px; font-size: 1.2rem; }
+    .main-header a.back-link { top: 13px; left: 7px; font-size: 1.2rem; }
+    .theme-toggle-btn { top: 13px; right: 7px; padding: 4px 8px; }
   }
 </style>
 </head>
 <body>
 
 <div class="main-header">
-  <a href="main.html" title="Back to Home"><i class="fas fa-circle-left"></i></a>
+  <a href="main.html" class="back-link" title="Back to Home"><i class="fas fa-circle-left"></i></a>
+  <button class="theme-toggle-btn" data-theme-toggle-btn>
+    <i class="fas fa-moon" data-theme-icon></i>
+    <span data-theme-label>Dark</span>
+  </button>
   <div class="main-title"><i class="fas fa-bus"></i> MMBC · Bus Rates</div>
   <div class="subtitle">Check current fares across all routes</div>
 </div>
@@ -185,6 +294,62 @@
     <p>Choose your preferred bus class for comfort and budget. MMBC provides several fare/service options.</p>
   </div>
 </div>
+
+<script>
+  (function() {
+    const htmlEl = document.documentElement;
+    const stored = localStorage.getItem('mmbc-theme');
+    const prefersDark = window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (stored === 'dark' || stored === 'light') {
+      htmlEl.setAttribute('data-theme', stored);
+    } else {
+      htmlEl.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    }
+
+    function setTheme(next) {
+      htmlEl.setAttribute('data-theme', next);
+      localStorage.setItem('mmbc-theme', next);
+    }
+
+    function toggleTheme() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      syncThemeControls();
+    }
+
+    function syncThemeControls() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+
+      document.querySelectorAll('[data-theme-toggle-btn]').forEach(btn => {
+        const icon = btn.querySelector('[data-theme-icon]');
+        const label = btn.querySelector('[data-theme-label]');
+        if (icon) icon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (label) label.textContent = current === 'dark' ? 'Light' : 'Dark';
+      });
+
+      document.querySelectorAll('input[type="checkbox"][data-theme-toggle]').forEach(cb => {
+        cb.checked = current === 'dark';
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-theme-toggle-btn]');
+      if (btn) toggleTheme();
+    });
+
+    document.addEventListener('change', function(e) {
+      const cb = e.target;
+      if (cb.matches('input[type="checkbox"][data-theme-toggle]')) {
+        toggleTheme();
+      }
+    });
+
+    syncThemeControls();
+  })();
+</script>
 
 </body>
 </html>
