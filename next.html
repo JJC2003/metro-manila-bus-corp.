@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MMBC · Select Time</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Awesome for icons (same as help.html) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    :root {
+      --bg-main: linear-gradient(120deg, #eaf6ff 0%, #e0e5ff 100%);
+      --text-main: #213253;
+      --text-muted: #4b5563;
+      --primary: #3965ff;
+      --accent: #4ab5fc;
+      --header-bg: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
+      --header-title: #ffffff;
+      --header-sub: #eaf1fc;
+      --header-icon: #ffe66c;
+      --back-link: #dde5fc;
+      --back-link-hover: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: #b8d2ff33;
+      --card-shadow: 0 6px 32px rgba(10,179,255,0.12);
+      --card-shadow-hover: 0 9px 40px #3ea6ff40;
+      --danger: #b91c1c;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-header {
+      background: var(--header-bg);
+      color: #fff;
+      text-align: center;
+      padding: 32px 0 24px 0;
+      position: relative;
+      box-shadow: 0 4px 24px rgba(32,50,84,0.14);
+      z-index: 2;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .main-header a {
+      position: absolute;
+      left: 20px;
+      top: 26px;
+      color: var(--back-link);
+      font-size: 1.4rem;
+      text-decoration: none;
+      z-index: 2;
+      transition: color 0.2s;
+    }
+
+    .main-header a:hover { color: var(--back-link-hover); }
+
+    .main-title {
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+      letter-spacing: 0.16em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-shadow: 0 2px 16px #4263b180;
+      color: var(--header-title);
+    }
+
+    .main-title i {
+      font-size: 1.8rem;
+      color: var(--header-icon);
+      filter: drop-shadow(0 0 3px #1c4980);
+    }
+
+    .subtitle {
+      font-size: 0.98rem;
+      margin: 0;
+      font-weight: 500;
+      color: var(--header-sub);
+      font-family: 'Lato', Arial, sans-serif;
+      text-shadow: 0 1px 6px #2d3c731a;
+    }
+
+    .content-shell {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 28px 16px 32px;
+      margin-top: -32px;
+    }
+
+    .booking-step {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card-bg);
+      border-radius: 17px;
+      box-shadow: var(--card-shadow);
+      border: 1.5px solid var(--card-border);
+      padding: 22px 20px 20px;
+      transition: box-shadow 0.2s;
+    }
+
+    .booking-step:hover {
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .step-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+    }
+
+    .step-title i {
+      color: var(--accent);
+    }
+
+    .step-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(232,243,255,0.9);
+      border: 1px solid #b8d2ff;
+      font-size: 0.75rem;
+      color: var(--primary);
+      margin-left: auto;
+    }
+
+    .field-group {
+      margin-bottom: 14px;
+    }
+
+    .field-label {
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d0ddf5;
+      background: #f5f7ff;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(57,101,255,0.2);
+      background: #ffffff;
+    }
+
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+      margin-top: 6px;
+    }
+
+    .slot-btn {
+      border-radius: 999px;
+      border: 1px solid #d0ddf5;
+      background: #f8f9ff;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      padding: 6px 8px;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.1s, box-shadow 0.18s;
+    }
+
+    .slot-btn:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(148,163,184,0.4);
+    }
+
+    .slot-btn.active {
+      background: linear-gradient(120deg, #3965ff, #6ce1ff);
+      border-color: transparent;
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(57,101,255,0.5);
+    }
+
+    .summary {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .summary span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 18px;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      font-size: 0.95rem;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.18s, transform 0.1s, box-shadow 0.18s, border-color 0.18s;
+      font-family: 'Poppins','DM Sans',sans-serif;
+    }
+
+    .btn:active { transform: translateY(1px); }
+
+    .btn-back {
+      background: transparent;
+      border-color: #c7d3f5;
+      color: var(--text-muted);
+    }
+
+    .btn-back:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #3965ff 57%, #6ce1ff 100%);
+      color: #ffffff;
+      box-shadow: 0 5px 18px rgba(108,225,255,0.45);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(120deg,#6ce1ff 90%, #3965ff 100%);
+    }
+
+    .error {
+      margin-top: 6px;
+      font-size: 0.82rem;
+      color: var(--danger);
+      display: none;
+    }
+
+    /* Optional: show current seat */
+    .seat-info {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .seat-info span { color: var(--primary); font-weight: 600; }
+
+    @media (max-width: 700px) {
+      .main-header { padding: 23px 0 17px 0; }
+      .main-header a { top: 13px; left: 7px; font-size: 1.1rem; }
+      .main-title { font-size: 1.25rem; letter-spacing: 0.12em; }
+      .content-shell { padding: 18px 10px 24px; margin-top: -26px; }
+      .booking-step { padding: 16px 12px 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+  <!-- Header similar to help.html -->
+  <div class="main-header">
+    <a href="seat_selection.html" title="Back to seat selection"><i class="fas fa-circle-left"></i></a>
+    <div class="main-title"><i class="fas fa-clock"></i> MMBC · TIME</div>
+    <div class="subtitle">Choose your arrival time and assigned bus</div>
+  </div>
+
+  <div class="content-shell">
+    <div class="booking-step">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <div class="step-title">
+          <i class="fas fa-clock"></i> SELECT ARRIVAL TIME
+        </div>
+        <span class="badge">Step 2 · Time & Bus</span>
+      </div>
+      <div class="step-sub">
+        Choose what time you will arrive at the terminal (5:00 AM – 10:00 PM) and your bus number.
+      </div>
+
+      <!-- Optional: show the seat coming from seat_selection -->
+      <div class="seat-info" id="seatInfo">
+        Seat selected: <span>none</span>
+      </div>
+
+      <!-- Bus number -->
+      <div class="field-group">
+        <div class="field-label">
+          <span>Bus number</span>
+        </div>
+        <select id="busNo">
+          <option value="">Select bus number</option>
+          <option value="MMBC-101">MMBC-101</option>
+          <option value="MMBC-102">MMBC-102</option>
+          <option value="MMBC-201">MMBC-201</option>
+          <option value="MMBC-301">MMBC-301</option>
+        </select>
+      </div>
+
+      <!-- Time slots -->
+      <div class="field-group">
+        <div class="field-label">
+          <span>Arrival time (5:00 AM – 10:00 PM)</span>
+        </div>
+        <div class="time-slots" id="timeSlots"></div>
+        <input type="hidden" id="selectedTime" name="selectedTime">
+      </div>
+
+      <div class="summary" id="summaryText">
+        Selected: <span>None</span>
+      </div>
+      <div class="error" id="errorText">
+        Please select a bus number and time before proceeding.
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-back" id="btnBack" type="button">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button class="btn btn-primary" id="btnProceed" type="button">
+          Proceed <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const timeSlotsContainer = document.getElementById('timeSlots');
+  const selectedTimeInput = document.getElementById('selectedTime');
+  const summaryText = document.getElementById('summaryText').querySelector('span');
+  const errorText = document.getElementById('errorText');
+  const busSelect = document.getElementById('busNo');
+
+  // NEW: read seat from URL (coming from book/seat_selection page)
+  const inParams    = new URLSearchParams(window.location.search);
+  const seatFromUrl = inParams.get('seat') || '';
+  const seatInfoEl  = document.getElementById('seatInfo');
+  if (seatFromUrl) {
+    seatInfoEl.innerHTML = 'Seat selected: <span>' + seatFromUrl + '</span>';
+  } else {
+    seatInfoEl.innerHTML = 'Seat selected: <span>none (go back and choose a seat)</span>';
+  }
+
+  function formatTimeLabel(h, m) {
+    const suffix = h >= 12 ? 'PM' : 'AM';
+    const hour12 = ((h + 11) % 12) + 1;
+    const mm = m.toString().padStart(2, '0');
+    return `${hour12}:${mm} ${suffix}`;
+  }
+
+  // 90-minute interval slots from 5:00 AM to 10:00 PM
+  function generateSlots() {
+    const start = 5 * 60;   // 5:00
+    const end = 22 * 60;    // 22:00 (10 PM)
+    const step = 90;        // 90 minutes
+
+    for (let t = start; t <= end; t += step) {
+      const h = Math.floor(t / 60);
+      const m = t % 60;
+      const label = formatTimeLabel(h, m);
+      const value = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'slot-btn';
+      btn.dataset.value = value;
+      btn.textContent = label;
+
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedTimeInput.value = value;
+        summaryText.textContent = `${label} · ${busSelect.value || 'No bus selected yet'}`;
+        errorText.style.display = 'none';
+      });
+
+      timeSlotsContainer.appendChild(btn);
+    }
+  }
+
+  generateSlots();
+
+  busSelect.addEventListener('change', () => {
+    const timeLabelBtn = document.querySelector('.slot-btn.active');
+    const timeLabel = timeLabelBtn ? timeLabelBtn.textContent : 'None';
+    if (timeLabelBtn) {
+      summaryText.textContent = `${timeLabel} · ${busSelect.value || 'No bus selected yet'}`;
+    } else {
+      summaryText.textContent = 'None';
+    }
+    errorText.style.display = 'none';
+  });
+
+  document.getElementById('btnBack').addEventListener('click', () => {
+    // Back to seat selection, keep seat if present
+    if (seatFromUrl) {
+      window.location.href = 'seat_selection.html?seat=' + encodeURIComponent(seatFromUrl);
+    } else {
+      window.location.href = 'seat_selection.html';
+    }
+  });
+
+  document.getElementById('btnProceed').addEventListener('click', () => {
+    const timeVal = selectedTimeInput.value;
+    const busVal = busSelect.value;
+
+    if (!timeVal || !busVal) {
+      errorText.style.display = 'block';
+      return;
+    }
+
+    // IMPORTANT: include seat in URL to payment.html
+    const params = new URLSearchParams({
+      time: timeVal,
+      bus: busVal,
+      seat: seatFromUrl || ''
+    });
+    window.location.href = 'payment.html?' + params.toString();
+  });
+</script>
+</body>
+</html>

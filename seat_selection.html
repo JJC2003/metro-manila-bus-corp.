@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>MMBC – Choose Your Seat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #176BFF;
+      --primary-soft: #E5F0FF;
+      --accent: #22C55E;
+      --danger: #EF4444;
+      --driver: #1D4ED8;
+      --bg: #F3F6FF;
+      --text-main: #0F172A;
+      --text-muted: #6B7280;
+      --white: #ffffff;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.10);
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --seat-available: #bfdbfe;
+      --seat-selected-text: #052e16;
+      --seat-selected-border: #16a34a;
+      --seat-occupied-text: #f9fafb;
+      --wrapper-border: transparent;
+    }
+
+    html[data-theme="dark"] {
+      --primary: #60a5ff;
+      --primary-soft: #0b1120;
+      --accent: #22C55E;
+      --danger: #fca5a5;
+      --driver: #3b82f6;
+      --bg: #020617;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --white: #020617;
+      --shadow: 0 18px 40px rgba(0,0,0,0.85);
+      --seat-available: #1d4ed8;
+      --seat-selected-text: #bbf7d0;
+      --seat-selected-border: #22c55e;
+      --seat-occupied-text: #fee2e2;
+      --wrapper-border: #1f2937;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 20px 16px;
+      color: var(--text-main);
+      font-size: 16px;
+      line-height: 1.5;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .theme-toggle-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 200;
+      border-radius: 999px;
+      border: 1px solid rgba(226,232,240,0.65);
+      background: rgba(15,23,42,0.12);
+      color: #0f172a;
+      padding: 6px 11px;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    html[data-theme="dark"] .theme-toggle-btn {
+      border-color: rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.7);
+      color: #f9fafb;
+    }
+
+    .theme-toggle-btn i {
+      font-size: 0.9rem;
+    }
+
+    .wrapper {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 20px 18px 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--wrapper-border);
+      transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .title {
+      margin: 0 0 4px 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .subtitle {
+      margin: 0 0 14px 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      justify-content: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .legend-available { background: #bfdbfe; }
+    .legend-selected  { background: #22c55e; }
+    .legend-occupied  { background: #ef4444; }
+    .legend-driver    { background: #1d4ed8; }
+
+    .bus-layout { margin-top: 10px; }
+
+    .driver-column {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      margin-left: 125px;
+    }
+
+    .driver-seat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-align: left;
+    }
+
+    .seats-row {
+      display: grid;
+      grid-template-columns: repeat(2, auto) 26px repeat(2, auto);
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .aisle { width: 26px; }
+
+    .seat {
+      width: 46px;
+      height: 46px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      user-select: none;
+      color: var(--text-main);
+      transition: transform 0.1s, box-shadow 0.1s, background 0.1s, border-color 0.1s, color 0.1s;
+      border: 1px solid #d1d5db;
+    }
+
+    .seat.available  { background: var(--seat-available); }
+    .seat.selected   { background: #22c55e; color: var(--seat-selected-text); border-color: var(--seat-selected-border); }
+    .seat.occupied   { background: #ef4444; color: var(--seat-occupied-text); cursor: not-allowed; }
+    .seat.driver     { background: var(--driver); color: #e5f0ff; cursor: default; }
+
+    .seat:hover:not(.occupied):not(.driver) {
+      box-shadow: 0 6px 12px rgba(15, 23, 42, 0.18);
+      transform: translateY(-1px);
+    }
+
+    .info {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .info strong { color: var(--text-main); }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      flex: 1;
+      border-radius: 999px;
+      height: 46px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s, box-shadow 0.1s, background 0.1s, color 0.1s;
+    }
+
+    .btn-back {
+      background: var(--primary-soft);
+      color: var(--text-main);
+      box-shadow: 0 6px 14px rgba(148, 163, 184, 0.35);
+    }
+
+    .btn-next {
+      background: var(--primary);
+      color: #f9fafb;
+      box-shadow: 0 10px 20px rgba(23, 107, 255, 0.45);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25);
+    }
+
+    .btn-next:disabled {
+      background: #9ca3af;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 400px) {
+      body {
+        padding: 16px 10px;
+        font-size: 15px;
+      }
+      .wrapper { padding: 18px 14px 14px; }
+      .seat {
+        width: 42px;
+        height: 42px;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<button class="theme-toggle-btn" data-theme-toggle-btn type="button">
+  <i class="fas fa-moon" data-theme-icon></i>
+  <span data-theme-label>Dark</span>
+</button>
+
+<div class="wrapper">
+  <h2 class="title">Choose your seat:</h2>
+  <p class="subtitle">Tap a seat to select it. Driver seat and red seats cannot be selected.</p>
+
+  <div class="legend">
+    <div class="legend-item">
+      <span class="legend-color legend-driver"></span><span>Driver seat</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-color legend-selected"></span><span>Selected</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-color legend-occupied"></span><span>Occupied</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-color legend-available"></span><span>Available</span>
+    </div>
+  </div>
+
+  <div class="bus-layout">
+    <div class="driver-column">
+      <div class="driver-seat-label">Driver</div>
+      <div class="seat driver" data-seat-number="D">D</div>
+    </div>
+
+    <div class="seats-row">
+      <div class="seat available" data-seat-number="1">1</div>
+      <div class="seat available" data-seat-number="2">2</div>
+      <div class="aisle"></div>
+      <div class="seat available" data-seat-number="3">3</div>
+      <div class="seat available" data-seat-number="4">4</div>
+    </div>
+
+    <div id="seatRows"></div>
+  </div>
+
+  <div class="info" id="seatInfo">No seat selected yet.</div>
+
+  <div class="actions">
+    <button type="button" class="btn btn-back" id="backBtn">← Back</button>
+    <button type="button" class="btn btn-next" id="nextBtn" disabled>Next →</button>
+  </div>
+</div>
+
+<script>
+  const maxSeat = 49;
+  const seatRowsContainer = document.getElementById('seatRows');
+  const seatInfo = document.getElementById('seatInfo');
+  const backBtn = document.getElementById('backBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  const occupiedSeats = [7, 8, 12, 19, 25, 33, 40];
+
+  let selectedSeat = null;
+
+  function createBusLayout() {
+    let seatNumber = 5;
+
+    while (seatNumber <= 44) {
+      const row = document.createElement('div');
+      row.classList.add('seats-row');
+
+      for (let i = 0; i < 2; i++) {
+        if (seatNumber <= 44) {
+          row.appendChild(createSeatElement(seatNumber));
+          seatNumber++;
+        } else {
+          const empty = document.createElement('div');
+          row.appendChild(empty);
+        }
+      }
+
+      const aisle = document.createElement('div');
+      aisle.classList.add('aisle');
+      row.appendChild(aisle);
+
+      for (let i = 0; i < 2; i++) {
+        if (seatNumber <= 44) {
+          row.appendChild(createSeatElement(seatNumber));
+          seatNumber++;
+        } else {
+          const empty = document.createElement('div');
+          row.appendChild(empty);
+        }
+      }
+
+      seatRowsContainer.appendChild(row);
+    }
+
+    const lastRow = document.createElement('div');
+    lastRow.style.display = 'flex';
+    lastRow.style.justifyContent = 'center';
+    lastRow.style.gap = '6px';
+    lastRow.style.marginTop = '6px';
+
+    for (let n = 45; n <= maxSeat; n++) {
+      lastRow.appendChild(createSeatElement(n));
+    }
+
+    seatRowsContainer.appendChild(lastRow);
+  }
+
+  function createSeatElement(number) {
+    const seat = document.createElement('div');
+    seat.classList.add('seat');
+    seat.textContent = number;
+    seat.dataset.seatNumber = number;
+
+    if (occupiedSeats.includes(number)) {
+      seat.classList.add('occupied');
+    } else {
+      seat.classList.add('available');
+    }
+
+    seat.addEventListener('click', onSeatClick);
+    return seat;
+  }
+
+  function onSeatClick(e) {
+    const seat = e.currentTarget;
+
+    if (seat.classList.contains('driver') || seat.classList.contains('occupied')) {
+      return;
+    }
+
+    const seatNumber = seat.dataset.seatNumber;
+
+    if (seat.classList.contains('selected')) {
+      seat.classList.remove('selected');
+      seat.classList.add('available');
+      selectedSeat = null;
+      seatInfo.innerHTML = 'No seat selected yet.';
+      nextBtn.disabled = true;
+    } else {
+      document.querySelectorAll('.seat.selected').forEach(s => {
+        s.classList.remove('selected');
+        s.classList.add('available');
+      });
+
+      seat.classList.remove('available');
+      seat.classList.add('selected');
+      selectedSeat = seatNumber;
+      seatInfo.innerHTML = 'You selected <strong>seat no. ' + seatNumber + '</strong>.';
+      nextBtn.disabled = false;
+    }
+  }
+
+  // initial seats 1–4 click handlers
+  document.querySelectorAll('.seats-row .seat').forEach(seat => {
+    const num = parseInt(seat.dataset.seatNumber, 10);
+    if (occupiedSeats.includes(num)) {
+      seat.classList.remove('available');
+      seat.classList.add('occupied');
+    } else {
+      seat.classList.add('available');
+    }
+    seat.addEventListener('click', onSeatClick);
+  });
+
+  backBtn.addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+
+  // book.html
+nextBtn.addEventListener('click', () => {
+  if (!selectedSeat) return;
+  // Include seat in URL
+  window.location.href = 'next.html?seat=' + encodeURIComponent(selectedSeat);
+});
+  createBusLayout();
+</script>
+
+<script>
+  (function() {
+    const htmlEl = document.documentElement;
+    const stored = localStorage.getItem('mmbc-theme');
+    const prefersDark = window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (stored === 'dark' || stored === 'light') {
+      htmlEl.setAttribute('data-theme', stored);
+    } else {
+      htmlEl.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    }
+
+    function setTheme(next) {
+      htmlEl.setAttribute('data-theme', next);
+      localStorage.setItem('mmbc-theme', next);
+    }
+
+    function toggleTheme() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      syncThemeControls();
+    }
+
+    function syncThemeControls() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+
+      document.querySelectorAll('[data-theme-toggle-btn]').forEach(btn => {
+        const icon = btn.querySelector('[data-theme-icon]');
+        const label = btn.querySelector('[data-theme-label]');
+        if (icon) icon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (label) label.textContent = current === 'dark' ? 'Light' : 'Dark';
+      });
+
+      document.querySelectorAll('input[type="checkbox"][data-theme-toggle]').forEach(cb => {
+        cb.checked = current === 'dark';
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-theme-toggle-btn]');
+      if (btn) toggleTheme();
+    });
+
+    document.addEventListener('change', function(e) {
+      const cb = e.target;
+      if (cb.matches('input[type="checkbox"][data-theme-toggle]')) {
+        toggleTheme();
+      }
+    });
+
+    syncThemeControls();
+  })();
+</script>
+
+</body>
+</html>

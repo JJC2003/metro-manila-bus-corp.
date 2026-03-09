@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>MMBC Booking Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    :root {
+      /* LIGHT THEME */
+      --bg: #f3f4ff;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.08);
+      --accent-strong: #2563eb;
+      --text-main: #0f172a;
+      --text-muted: #6b7280;
+      --danger: #b91c1c;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow: 0 16px 35px rgba(15,23,42,0.08);
+      --bar-track: #e5e7eb;
+      --bar-fill-gradient: linear-gradient(180deg, #38bdf8 0, #0ea5e9 45%, #1d4ed8 100%);
+      --card-border: #e5e7eb;
+      --progress-track: #e5e7eb;
+      --progress-border: #d1d5db;
+      --header-bg: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
+      --header-title: #ffffff;
+      --header-sub: #eaf1fc;
+      --header-icon: #ffe66c;
+      --back-link: #dde5fc;
+      --back-link-hover: #ffffff;
+      --header-badge-bg: rgba(15,23,42,0.06);
+      --header-badge-border: rgba(148,163,184,0.7);
+      --dashboard-grad: radial-gradient(circle at top, #e0f2fe 0, #e5e7eb 52%, #e5e7eb 100%);
+    }
+
+    html[data-theme="dark"] {
+      /* DARK THEME */
+      --bg: #020617;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.1);
+      --accent-strong: #38bdf8;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #fb7185;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow: 0 18px 45px rgba(15,23,42,0.85);
+      --bar-track: rgba(15,23,42,0.9);
+      --bar-fill-gradient: linear-gradient(180deg, #38bdf8 0, #0ea5e9 45%, #0f172a 100%);
+      --card-border: rgba(30,64,175,0.9);
+      --progress-track: rgba(15,23,42,0.9);
+      --progress-border: rgba(55,65,81,0.9);
+      --header-bg: linear-gradient(90deg, #020617 0%, #111827 120%);
+      --header-title: #f9fafb;
+      --header-sub: #9ca3af;
+      --header-icon: #fde68a;
+      --back-link: #9ca3af;
+      --back-link-hover: #f9fafb;
+      --header-badge-bg: rgba(15,23,42,0.85);
+      --header-badge-border: rgba(148,163,184,0.5);
+      --dashboard-grad: radial-gradient(circle at top, #0f172a 0, #020617 52%, #000 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 200;
+      border-radius: 999px;
+      border: 1px solid rgba(226,232,240,0.65);
+      background: rgba(15,23,42,0.12);
+      color: #f9fafb;
+      padding: 6px 11px;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    html[data-theme="dark"] .theme-toggle-btn {
+      border-color: rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.7);
+      color: #f9fafb;
+    }
+
+    .theme-toggle-btn i {
+      font-size: 0.9rem;
+    }
+
+    /* HEADER similar to help.html */
+    .main-header {
+      background: var(--header-bg);
+      color: #fff;
+      text-align: center;
+      padding: 32px 0 24px 0;
+      position: relative;
+      box-shadow: 0 4px 24px rgba(32,50,84,0.14);
+      z-index: 2;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .main-header a {
+      position: absolute;
+      left: 20px;
+      top: 26px;
+      color: var(--back-link);
+      font-size: 1.4rem;
+      text-decoration: none;
+      z-index: 2;
+      transition: color 0.2s;
+    }
+
+    .main-header a:hover { color: var(--back-link-hover); }
+
+    .main-title {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+      letter-spacing: 0.16em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-shadow: 0 2px 16px rgba(66,99,177,0.5);
+      color: var(--header-title);
+    }
+
+    .main-title i {
+      font-size: 1.8rem;
+      color: var(--header-icon);
+      filter: drop-shadow(0 0 3px #1c4980);
+    }
+
+    .subtitle {
+      font-size: 0.98rem;
+      margin: 0;
+      font-weight: 500;
+      color: var(--header-sub);
+      text-shadow: 0 1px 6px rgba(45,60,115,0.1);
+    }
+
+    .dashboard-shell {
+      background: var(--dashboard-grad);
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 24px 12px 32px;
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 960px;
+      margin-top: -32px;
+    }
+
+    .dashboard-header {
+      margin-bottom: 18px;
+    }
+
+    .dashboard-title {
+      font-size: 1.3rem;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dashboard-title span {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--header-badge-bg);
+      border: 1px solid var(--header-badge-border);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .dashboard-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 16px 16px 14px;
+      border: 1px solid var(--card-border);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      outline: none;
+      transition: transform 0.12s ease-out, box-shadow 0.15s ease-out, border-color 0.15s ease-out, background 0.25s ease;
+    }
+
+    html[data-theme="dark"] .card {
+      background: radial-gradient(circle at top left, #020617 0, #020617 38%, #020617 100%);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.12), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .card-value {
+      font-size: 1.7rem;
+      font-weight: 650;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .card-value span.unit {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .card-extra {
+      font-size: 0.78rem;
+      margin-top: 6px;
+      color: var(--text-muted);
+    }
+
+    .card:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 10px 25px rgba(15,23,42,0.25);
+    }
+
+    .card.active {
+      border-color: var(--accent-strong);
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.7), 0 18px 45px rgba(15,23,42,0.35);
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: 4px;
+    }
+
+    .badge-pill.accent {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      border: 1px solid rgba(56,189,248,0.6);
+    }
+
+    .badge-pill.danger {
+      background: rgba(248,113,113,0.1);
+      color: #b91c1c;
+      border: 1px solid rgba(248,113,113,0.7);
+    }
+
+    html[data-theme="dark"] .badge-pill.danger {
+      color: #fecaca;
+    }
+
+    .badge-pill i {
+      font-style: normal;
+      font-size: 0.7rem;
+    }
+
+    .progress-wrapper {
+      margin-top: 10px;
+    }
+
+    .progress-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--progress-track);
+      border: 1px solid var(--progress-border);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #a3e635, #facc15);
+      box-shadow: 0 0 14px rgba(22,163,74,0.6);
+      transition: width 0.45s ease-out;
+    }
+
+    .chart-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
+      border: 1px solid var(--card-border);
+      margin-top: 4px;
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+
+    html[data-theme="dark"] .chart-card {
+      background: radial-gradient(circle at top right, #020617 0, #020617 40%, #020617 100%);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 6px;
+    }
+
+    .chart-title {
+      font-size: 0.92rem;
+      font-weight: 550;
+      color: var(--text-main);
+    }
+
+    .chart-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .month-select {
+      font-size: 0.78rem;
+      padding: 5px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(255,255,255,0.9);
+      color: var(--text-main);
+      outline: none;
+    }
+
+    html[data-theme="dark"] .month-select {
+      background: rgba(15,23,42,0.95);
+      color: var(--text-main);
+    }
+
+    .bars {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 6px;
+      align-items: flex-end;
+      height: 180px;
+      margin-top: 4px;
+    }
+
+    .bar {
+      position: relative;
+      border-radius: 999px 999px 3px 3px;
+      background: var(--bar-track);
+      border: 1px solid rgba(148,163,184,0.8);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.12s ease-out;
+    }
+
+    .bar-inner {
+      position: absolute;
+      inset: auto 1px 1px 1px;
+      border-radius: 999px;
+      background: var(--bar-fill-gradient);
+      height: 0;
+      transition: height 0.4s ease-out;
+    }
+
+    .bar.active {
+      border-color: var(--accent-strong);
+      box-shadow: 0 0 18px rgba(56,189,248,0.6);
+      transform: translateY(-2px);
+    }
+
+    .bar-label-row {
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:6px;
+      margin-top:4px;
+    }
+
+    .bar-label {
+      font-size: 0.7rem;
+      text-align: center;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    @media (max-width: 720px) {
+      .main-header { padding: 23px 0 17px 0; }
+      .main-header a { top: 13px; left: 7px; font-size: 1.1rem; }
+      .main-title { font-size: 1.25rem; letter-spacing: 0.12em; }
+      .dashboard-shell { padding: 16px 10px 24px; }
+      .dashboard { margin-top: -26px; }
+      .bars { gap: 4px; }
+      .dashboard-title { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+  <!-- Shared theme toggle -->
+  <button class="theme-toggle-btn" data-theme-toggle-btn type="button">
+    <i class="fas fa-moon" data-theme-icon></i>
+    <span data-theme-label>Dark</span>
+  </button>
+
+  <!-- Header similar to help.html -->
+  <div class="main-header">
+    <a href="main.html" title="Back to Home"><i class="fas fa-circle-left"></i></a>
+    <div class="main-title"><i class="fas fa-chart-column"></i> MMBC · Dashboard</div>
+    <div class="subtitle">Overview of monthly customer bookings</div>
+  </div>
+
+  <!-- Dashboard body -->
+  <div class="dashboard-shell">
+    <div class="dashboard">
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          Booking Performance
+          <span>Monthly percentage overview</span>
+        </div>
+        <div class="dashboard-sub">
+          Bars show the percentage of yearly bookings per month. Click any bar, label, or card to focus a month.
+        </div>
+      </div>
+
+      <div class="cards-row">
+        <button class="card" type="button" data-card="total">
+          <div class="card-inner">
+            <div class="card-label">Total bookings (Year)</div>
+            <div class="card-value">
+              <span id="total-bookings">0</span>
+              <span class="unit">bookings</span>
+            </div>
+            <div class="card-extra">
+              Derived from all months in the sample data.
+            </div>
+          </div>
+        </button>
+
+        <button class="card" type="button" data-card="month">
+          <div class="card-inner">
+            <div class="card-label">Bookings this month</div>
+            <div class="card-value">
+              <span id="month-bookings">0</span>
+              <span class="unit">bookings</span>
+            </div>
+            <div class="card-extra">
+              Month: <span id="month-name-label"></span>
+            </div>
+          </div>
+        </button>
+
+        <button class="card active" type="button" data-card="percent">
+          <div class="card-inner">
+            <div class="card-label">Percentage this month</div>
+            <div class="card-value">
+              <span id="percentage-label">0</span>
+              <span class="unit">% of yearly bookings</span>
+              <span class="badge-pill accent" id="badge-trend">
+                <i>▲</i><span id="badge-text">Good month</span>
+              </span>
+            </div>
+            <div class="progress-wrapper">
+              <div class="progress-label-row">
+                <span>0%</span>
+                <span id="percent-small">0%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="progress-fill"></div>
+              </div>
+            </div>
+            <div class="card-extra" id="percent-description">
+              Waiting for data...
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Bookings by month</div>
+            <div class="chart-sub">Bar height = percentage of yearly bookings for that month.</div>
+          </div>
+          <select id="month-select" class="month-select"></select>
+        </div>
+
+        <div class="bars" id="bars-container"></div>
+        <div class="bar-label-row" id="bar-label-row"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Sample data
+  const bookingsPerMonth = [4, 1, 3, 2, 1, 3, 1, 3, 4, 5, 6, 7];
+  const monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  const totalBookings = bookingsPerMonth.reduce((sum, v) => sum + v, 0);
+
+  const totalBookingsEl = document.getElementById("total-bookings");
+  const monthBookingsEl = document.getElementById("month-bookings");
+  const percentageLabelEl = document.getElementById("percentage-label");
+  const percentSmallEl = document.getElementById("percent-small");
+  const progressFillEl = document.getElementById("progress-fill");
+  const percentDescriptionEl = document.getElementById("percent-description");
+  const monthNameLabelEl = document.getElementById("month-name-label");
+  const monthSelectEl = document.getElementById("month-select");
+  const barsContainerEl = document.getElementById("bars-container");
+  const barLabelRowEl = document.getElementById("bar-label-row");
+  const badgeTrendEl = document.getElementById("badge-trend");
+  const badgeTextEl = document.getElementById("badge-text");
+  const cards = document.querySelectorAll(".card");
+
+  totalBookingsEl.textContent = totalBookings;
+
+  // Populate select
+  bookingsPerMonth.forEach((value, index) => {
+    const opt = document.createElement("option");
+    opt.value = index;
+    opt.textContent = `${monthNames[index]} – ${value} bookings`;
+    monthSelectEl.appendChild(opt);
+  });
+
+  // Bars + month labels
+  bookingsPerMonth.forEach((value, index) => {
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    bar.dataset.monthIndex = index;
+    const inner = document.createElement("div");
+    inner.className = "bar-inner";
+    inner.dataset.monthIndex = index;
+    bar.appendChild(inner);
+    barsContainerEl.appendChild(bar);
+
+    const label = document.createElement("div");
+    label.className = "bar-label";
+    label.dataset.monthIndex = index;
+    label.textContent = monthNames[index].slice(0, 3);
+    barLabelRowEl.appendChild(label);
+  });
+
+  function renderBars() {
+    document.querySelectorAll(".bar-inner").forEach(inner => {
+      const i = parseInt(inner.dataset.monthIndex, 10);
+      const val = bookingsPerMonth[i];
+      const share = totalBookings > 0 ? (val / totalBookings) * 100 : 0;
+      inner.style.height = share + "%";
+    });
+  }
+
+  function updateForMonth(monthIndex) {
+    const bookings = bookingsPerMonth[monthIndex];
+    const percent = totalBookings > 0 ? (bookings / totalBookings) * 100 : 0;
+    const rounded = Math.round(percent * 10) / 10;
+
+    monthBookingsEl.textContent = bookings;
+    monthNameLabelEl.textContent = monthNames[monthIndex];
+    percentageLabelEl.textContent = rounded.toFixed(1);
+    percentSmallEl.textContent = rounded.toFixed(1) + "%";
+
+    const width = Math.min(rounded, 100);
+    progressFillEl.style.width = width + "%";
+
+    if (percent === 0) {
+      percentDescriptionEl.textContent = "No bookings recorded for this month.";
+      badgeTrendEl.classList.remove("accent");
+      badgeTrendEl.classList.add("danger");
+      badgeTextEl.textContent = "No activity";
+      badgeTrendEl.querySelector("i").textContent = "!";
+    } else if (percent < 5) {
+      percentDescriptionEl.textContent = "This month contributes only a small portion of yearly bookings.";
+      badgeTrendEl.classList.remove("accent");
+      badgeTrendEl.classList.add("danger");
+      badgeTextEl.textContent = "Low month";
+      badgeTrendEl.querySelector("i").textContent = "▼";
+    } else {
+      percentDescriptionEl.textContent = "This month contributes a healthy share of this year's bookings.";
+      badgeTrendEl.classList.add("accent");
+      badgeTrendEl.classList.remove("danger");
+      badgeTextEl.textContent = "Good month";
+      badgeTrendEl.querySelector("i").textContent = "▲";
+    }
+
+    // Highlight active bar
+    document.querySelectorAll(".bar").forEach(bar => bar.classList.remove("active"));
+    const activeBar = document.querySelector(`.bar[data-month-index="${monthIndex}"]`);
+    if (activeBar) activeBar.classList.add("active");
+  }
+
+  // Month select change
+  monthSelectEl.addEventListener("change", (e) => {
+    const idx = parseInt(e.target.value, 10);
+    updateForMonth(idx);
+  });
+
+  // Click on bars or labels to change month
+  document.addEventListener("click", (e) => {
+    const bar = e.target.closest(".bar");
+    const label = e.target.closest(".bar-label");
+
+    let idx = null;
+    if (bar) {
+      idx = parseInt(bar.dataset.monthIndex, 10);
+    } else if (label) {
+      idx = parseInt(label.dataset.monthIndex, 10);
+    }
+
+    if (idx != null) {
+      monthSelectEl.value = idx.toString();
+      updateForMonth(idx);
+    }
+  });
+
+  // Cards clickable (refocus current month)
+  cards.forEach(card => {
+    card.addEventListener("click", () => {
+      cards.forEach(c => c.classList.remove("active"));
+      card.classList.add("active");
+      const idx = parseInt(monthSelectEl.value, 10);
+      updateForMonth(idx);
+    });
+  });
+
+  // Initial
+  const today = new Date();
+  const currentMonthIndex = today.getMonth();
+  monthSelectEl.value = currentMonthIndex.toString();
+  renderBars();
+  updateForMonth(currentMonthIndex);
+
+  // THEME TOGGLE SCRIPT (shared)
+  (function() {
+    const htmlEl = document.documentElement;
+    const stored = localStorage.getItem('mmbc-theme');
+    const prefersDark = window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (stored === 'dark' || stored === 'light') {
+      htmlEl.setAttribute('data-theme', stored);
+    } else {
+      htmlEl.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    }
+
+    function setTheme(next) {
+      htmlEl.setAttribute('data-theme', next);
+      localStorage.setItem('mmbc-theme', next);
+    }
+
+    function toggleTheme() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      syncThemeControls();
+    }
+
+    function syncThemeControls() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+
+      document.querySelectorAll('[data-theme-toggle-btn]').forEach(btn => {
+        const icon = btn.querySelector('[data-theme-icon]');
+        const label = btn.querySelector('[data-theme-label]');
+        if (icon) icon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (label) label.textContent = current === 'dark' ? 'Light' : 'Dark';
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-theme-toggle-btn]');
+      if (btn) toggleTheme();
+    });
+
+    syncThemeControls();
+  })();
+</script>
+</body>
+</html>

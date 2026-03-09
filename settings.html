@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MMBC - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:400;700&family=Lato:400;700&family=Poppins:400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* LIGHT THEME (default) */
+            --primary: #176BFF;
+            --secondary: #2F9BFF;
+            --accent: #FFC94A;
+            --bg: linear-gradient(135deg, #eaf6ff 0%, #e0e5ff 100%);
+            --bg-elevated: rgba(255,255,255,0.9);
+            --bg-nav: rgba(255,255,255,0.98);
+            --border-subtle: #dce6f8;
+            --text-main: #111827;
+            --text-muted: #4B5563;
+            --text-soft: #6b7280;
+            --pill-bg: #e5edff;
+            --pill-text: #1c4980;
+            --shadow-soft: 0 14px 30px rgba(15, 23, 42, 0.08);
+            --shadow-light: 0 8px 20px rgba(15, 23, 42, 0.06);
+            --nav-shadow: 0 -10px 25px rgba(15, 23, 42, 0.10);
+            --danger: #b91c1c;
+            --toggle-track: #e5e7eb;
+            --toggle-thumb: #ffffff;
+        }
+
+        html[data-theme="dark"] {
+            /* DARK THEME OVERRIDES */
+            --primary: #60a5ff;
+            --secondary: #38bdf8;
+            --accent: #fbbf24;
+            --bg: radial-gradient(circle at top, #020617 0%, #020617 40%, #020617 100%);
+            --bg-elevated: rgba(15,23,42,0.98);
+            --bg-nav: rgba(15,23,42,0.98);
+            --border-subtle: #1f2937;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --text-soft: #6b7280;
+            --pill-bg: #0f172a;
+            --pill-text: #e5e7eb;
+            --shadow-soft: 0 18px 40px rgba(0,0,0,0.75);
+            --shadow-light: 0 10px 26px rgba(15,23,42,0.85);
+            --nav-shadow: 0 -10px 35px rgba(0,0,0,0.85);
+            --danger: #fca5a5;
+            --toggle-track: #1f2937;
+            --toggle-thumb: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'DM Sans', 'Lato', 'Poppins', Arial, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            line-height: 1.6;
+            color: var(--text-main);
+            padding-bottom: 80px;
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        /* Header */
+        .main-header {
+            background: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
+            color: #fff;
+            text-align: center;
+            padding: 26px 0 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            box-shadow: 0 4px 24px rgba(32,50,84,0.35);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        html[data-theme="dark"] .main-header {
+            box-shadow: 0 4px 26px rgba(0,0,0,0.85);
+        }
+
+        .main-header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo-icon {
+            background: rgba(255,255,255,0.18);
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffeb99;
+            box-shadow: 0 4px 12px rgba(15,23,42,0.30);
+        }
+
+        .header-logo-icon i { font-size: 1.1rem; }
+
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            align-items: center;
+        }
+
+        .header-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+        }
+
+        .header-sub {
+            font-size: 0.78rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #e5efff;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            opacity: 0.95;
+        }
+
+        .theme-toggle-btn {
+            border-radius: 999px;
+            border: 1px solid rgba(226,232,240,0.65);
+            background: rgba(15,23,42,0.12);
+            color: #f9fafb;
+            padding: 5px 10px;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .theme-toggle-btn i {
+            font-size: 0.9rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -18px auto 0;
+            padding: 20px 18px 0;
+        }
+
+        .settings-card {
+            background: var(--bg-elevated);
+            border-radius: 24px;
+            padding: 22px 18px 18px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 18px;
+            transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .settings-card h2 {
+            color: var(--text-main);
+            margin: 0 0 6px 0;
+            font-size: 1.2rem;
+            font-family: 'Poppins', 'DM Sans';
+            font-weight: 900;
+            letter-spacing: .08rem;
+        }
+
+        .settings-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: .08rem;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            margin: 14px 0 6px;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 6px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.96rem;
+            color: var(--text-main);
+        }
+
+        .settings-item:last-child { border-bottom: none; }
+
+        .settings-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-label i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .settings-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .settings-right {
+            font-size: 0.84rem;
+            color: var(--text-soft);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pill {
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: var(--pill-bg);
+            color: var(--pill-text);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* toggle */
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 22px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: var(--toggle-track);
+            transition: .2s;
+            border-radius: 999px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--toggle-thumb);
+            transition: .2s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(148,163,184,0.6);
+        }
+
+        .toggle-switch input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(18px);
+        }
+
+        .settings-link {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .settings-link:hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .danger-text { color: var(--danger); }
+
+        /* bottom nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-nav);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 10px 12px;
+            box-shadow: var(--nav-shadow);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            transition: background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #9CA3AF;
+            text-decoration: none;
+            font-size: 0.75rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        html[data-theme="dark"] .nav-item {
+            color: #6b7280;
+        }
+
+        .nav-item i {
+            font-size: 1.25rem;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active i {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px 12px 0;
+                margin-top: -12px;
+            }
+            .main-header-inner {
+                padding: 0 12px;
+            }
+            .header-title {
+                font-size: 1.2rem;
+            }
+            .settings-card {
+                padding: 18px 12px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-header">
+    <div class="main-header-inner">
+        <div class="header-left">
+            <div class="header-logo-icon"><i class="fas fa-bus"></i></div>
+        </div>
+        <div class="header-center">
+            <div class="header-text">
+                <div class="header-title">MMBC</div>
+                <div class="header-sub">SETTINGS</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="theme-toggle-btn" data-theme-toggle-btn>
+                <i class="fas fa-moon" data-theme-icon></i>
+                <span data-theme-label>Dark</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- ACCOUNT CARD REMOVED -->
+
+    <div class="settings-card">
+        <h2>Preferences</h2>
+        <div class="settings-description">Control notifications and app behavior.</div>
+
+        <div class="section-label">Notifications</div>
+        <div class="settings-item">
+            <div class="settings-label">
+                <i class="fas fa-bell"></i>
+                <span>Trip reminders</span>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="settings-item">
+            <div class="settings-label">
+                <i class="fas fa-ticket"></i>
+                <span>Booking updates</span>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="settings-item">
+            <div class="settings-label">
+                <i class="fas fa-bullhorn"></i>
+                <span>Promotions</span>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="section-label">App</div>
+        <div class="settings-item">
+            <div class="settings-label">
+                <i class="fas fa-language"></i>
+                <span>Language</span>
+            </div>
+            <div class="settings-right">
+                <span>English</span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <div class="settings-item">
+            <div class="settings-label">
+                <i class="fas fa-coins"></i>
+                <span>Currency</span>
+            </div>
+            <div class="settings-right">
+                <span>PHP (₱)</span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <div class="settings-item">
+            <div class="settings-label">
+                <i class="fas fa-moon"></i>
+                <span>Dark mode</span>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" data-theme-toggle>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="settings-card">
+        <h2>Support & Security</h2>
+        <div class="settings-description">Help, terms, and data control.</div>
+
+        <div class="settings-item">
+            <div class="settings-label">
+                <i class="fas fa-circle-question"></i>
+                <span>Help & Support</span>
+            </div>
+            <div class="settings-right">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <div class="settings-item">
+            <div class="settings-label">
+                <i class="fas fa-file-contract"></i>
+                <span>Terms & Privacy</span>
+            </div>
+            <div class="settings-right">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <div class="settings-item">
+            <div class="settings-label">
+                <i class="fas fa-trash-alt danger-text"></i>
+                <span class="danger-text">Delete account</span>
+            </div>
+            <div class="settings-right">
+                <a href="#" class="settings-link danger-text">Manage</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <a href="main.html" class="nav-item">
+        <i class="fas fa-house"></i>
+        Home
+    </a>
+    <a href="live-gps.html" class="nav-item">
+        <i class="fas fa-paper-plane"></i>
+        Track
+    </a>
+    <a href="profile.html" class="nav-item">
+        <i class="fas fa-user"></i>
+        Profile
+    </a>
+    <a href="menu.html" class="nav-item">
+        <i class="fas fa-bars"></i>
+        Menu
+    </a>
+</nav>
+
+<!-- Shared global theme script – include this on EVERY page -->
+<script>
+  (function() {
+    const htmlEl = document.documentElement;
+    const stored = localStorage.getItem('mmbc-theme');
+    const prefersDark = window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // initial theme
+    if (stored === 'dark' || stored === 'light') {
+      htmlEl.setAttribute('data-theme', stored);
+    } else {
+      htmlEl.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    }
+
+    function setTheme(next) {
+      htmlEl.setAttribute('data-theme', next);
+      localStorage.setItem('mmbc-theme', next);
+    }
+
+    function toggleTheme() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      syncThemeControls();
+    }
+
+    function syncThemeControls() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+
+      // header buttons
+      document.querySelectorAll('[data-theme-toggle-btn]').forEach(btn => {
+        const icon = btn.querySelector('[data-theme-icon]');
+        const label = btn.querySelector('[data-theme-label]');
+        if (icon) icon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (label) label.textContent = current === 'dark' ? 'Light' : 'Dark';
+      });
+
+      // checkbox toggles
+      document.querySelectorAll('input[type="checkbox"][data-theme-toggle]').forEach(cb => {
+        cb.checked = current === 'dark';
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-theme-toggle-btn]');
+      if (btn) toggleTheme();
+    });
+
+    document.addEventListener('change', function(e) {
+      const cb = e.target;
+      if (cb.matches('input[type="checkbox"][data-theme-toggle]')) {
+        toggleTheme();
+      }
+    });
+
+    syncThemeControls();
+  })();
+</script>
+
+</body>
+</html>

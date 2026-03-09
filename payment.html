@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>MMBC – Ticket Receipt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --bg-main: linear-gradient(120deg, #eaf6ff 0%, #e0e5ff 100%);
+      --text-main: #213253;
+      --text-muted: #4b5563;
+      --primary: #3965ff;
+      --accent: #4ab5fc;
+      --danger: #b91c1c;
+      --success: #16a34a;
+      --card-bg: rgba(255,255,255,0.96);
+      --card-border: #b8d2ff33;
+      --card-shadow: 0 6px 32px rgba(10,179,255,0.12);
+      --header-bg: linear-gradient(90deg, #1c4980 0%, #3ea6ff 120%);
+      --header-title: #ffffff;
+      --header-sub: #eaf1fc;
+      --header-icon: #ffe66c;
+      --back-link: #dde5fc;
+      --back-link-hover: #ffffff;
+    }
+
+    html[data-theme="dark"] {
+      --bg-main: radial-gradient(circle at top, #020617 0%, #020617 40%, #020617 100%);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --primary: #60a5ff;
+      --accent: #38bdf8;
+      --danger: #fb7185;
+      --success: #4ade80;
+      --card-bg: rgba(15,23,42,0.98);
+      --card-border: #1f2937;
+      --card-shadow: 0 18px 40px rgba(0,0,0,0.85);
+      --header-bg: linear-gradient(90deg, #020617 0%, #111827 120%);
+      --header-title: #f9fafb;
+      --header-sub: #9ca3af;
+      --header-icon: #fde68a;
+      --back-link: #9ca3af;
+      --back-link-hover: #f9fafb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .theme-toggle-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 200;
+      border-radius: 999px;
+      border: 1px solid rgba(226,232,240,0.65);
+      background: rgba(15,23,42,0.12);
+      color: #0f172a;
+      padding: 6px 11px;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    html[data-theme="dark"] .theme-toggle-btn {
+      border-color: rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.7);
+      color: #f9fafb;
+    }
+
+    .theme-toggle-btn i { font-size: 0.9rem; }
+
+    .main-header {
+      background: var(--header-bg);
+      color: #fff;
+      text-align: center;
+      padding: 32px 0 24px 0;
+      position: relative;
+      box-shadow: 0 4px 24px rgba(32,50,84,0.14);
+      z-index: 2;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .main-header a {
+      position: absolute;
+      left: 20px;
+      top: 26px;
+      color: var(--back-link);
+      font-size: 1.4rem;
+      text-decoration: none;
+      z-index: 2;
+      transition: color 0.2s;
+    }
+
+    .main-header a:hover { color: var(--back-link-hover); }
+
+    .main-title {
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+      letter-spacing: 0.16em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-shadow: 0 2px 16px #4263b180;
+      color: var(--header-title);
+    }
+
+    .main-title i {
+      font-size: 1.8rem;
+      color: var(--header-icon);
+      filter: drop-shadow(0 0 3px #1c4980);
+    }
+
+    .subtitle {
+      font-size: 0.98rem;
+      margin: 0;
+      font-weight: 500;
+      color: var(--header-sub);
+      text-shadow: 0 1px 6px #2d3c731a;
+    }
+
+    .content-shell {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 26px 16px 32px;
+      margin-top: -32px;
+    }
+
+    .receipt-card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card-bg);
+      border-radius: 17px;
+      border: 1.5px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      padding: 20px 20px 18px;
+      transition: box-shadow 0.2s;
+    }
+
+    .receipt-card:hover { box-shadow: 0 10px 34px rgba(15,23,42,0.16); }
+
+    .receipt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .receipt-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .receipt-title i { color: var(--accent); }
+
+    .receipt-badge {
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(232,243,255,0.9);
+      border: 1px solid #b8d2ff;
+      font-size: 0.75rem;
+      color: var(--primary);
+    }
+
+    html[data-theme="dark"] .receipt-badge {
+      background: rgba(15,23,42,0.9);
+      border-color: #1f2937;
+      color: var(--text-muted);
+    }
+
+    .receipt-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      margin-top: 12px;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title i { color: var(--accent); }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(148,163,184,0.6);
+    }
+
+    .info-label { color: var(--text-muted); }
+    .info-value { font-weight: 600; }
+
+    .customer-type-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 6px 0 4px;
+    }
+
+    .type-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid #cbd5f5;
+      background: #f5f7ff;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+
+    html[data-theme="dark"] .type-option {
+      background: #020617;
+      border-color: #1f2937;
+    }
+
+    .type-option input { accent-color: var(--primary); }
+
+    .type-option:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .price-box {
+      margin-top: 4px;
+      border-radius: 12px;
+      background: #f5f7ff;
+      padding: 9px 11px;
+      font-size: 0.9rem;
+    }
+
+    html[data-theme="dark"] .price-box {
+      background: #020617;
+      border: 1px solid #1f2937;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .price-row.total {
+      font-weight: 800;
+      font-size: 1rem;
+      margin-top: 4px;
+      border-top: 1px dashed #cbd5f5;
+      padding-top: 4px;
+    }
+
+    .price-label { color: var(--text-muted); }
+    .price-value { font-weight: 600; }
+    .price-value.total { color: var(--success); }
+
+    .note {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .error {
+      margin-top: 6px;
+      font-size: 0.82rem;
+      color: var(--danger);
+      display: none;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      font-size: 0.9rem;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.18s, transform 0.1s, box-shadow 0.18s, border-color 0.18s;
+      font-family: 'Poppins','DM Sans',sans-serif;
+    }
+
+    .btn:active { transform: translateY(1px); }
+
+    .btn-back {
+      background: transparent;
+      border-color: #c7d3f5;
+      color: var(--text-muted);
+    }
+
+    .btn-back:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-confirm {
+      background: linear-gradient(120deg, #22c55e, #a3e635);
+      color: #02120a;
+      box-shadow: 0 5px 18px rgba(34,197,94,0.45);
+    }
+
+    .btn-confirm:hover {
+      background: linear-gradient(120deg, #16a34a, #84cc16);
+    }
+
+    @media (max-width: 700px) {
+      .main-header { padding: 23px 0 17px 0; }
+      .main-header a { top: 13px; left: 7px; font-size: 1.1rem; }
+      .main-title { font-size: 1.25rem; letter-spacing: 0.12em; }
+      .content-shell { padding: 18px 10px 24px; margin-top: -26px; }
+      .receipt-card { padding: 16px 12px 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+  <!-- Theme toggle -->
+  <button class="theme-toggle-btn" data-theme-toggle-btn type="button">
+    <i class="fas fa-moon" data-theme-icon></i>
+    <span data-theme-label>Dark</span>
+  </button>
+
+  <!-- Header -->
+  <div class="main-header">
+    <!-- back to next.html (bus + time page) -->
+    <a href="next.html" title="Back to time selection"><i class="fas fa-circle-left"></i></a>
+    <div class="main-title"><i class="fas fa-receipt"></i> MMBC · RECEIPT</div>
+    <div class="subtitle">Review your trip and final fare</div>
+  </div>
+
+  <div class="content-shell">
+    <div class="receipt-card">
+      <div class="receipt-header">
+        <div class="receipt-title">
+          <i class="fas fa-ticket-alt"></i> BOOKING SUMMARY
+        </div>
+        <div class="receipt-badge">Step 3 · Payment</div>
+      </div>
+
+      <div class="receipt-sub">
+        Please check your bus, seat, and time, then choose your customer type to see the amount to pay.
+      </div>
+
+      <!-- Trip info -->
+      <div class="section-title">
+        <i class="fas fa-bus"></i> Trip details
+      </div>
+      <div class="info-row">
+        <span class="info-label">Bus number</span>
+        <span class="info-value" id="infoBus">–</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Seat number</span>
+        <span class="info-value" id="infoSeat">–</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Arrival time</span>
+        <span class="info-value" id="infoTime">–</span>
+      </div>
+
+      <!-- Type & fare -->
+      <div class="section-title" style="margin-top:14px;">
+        <i class="fas fa-user-check"></i> Customer type & fare
+      </div>
+
+      <div class="customer-type-group" id="customerTypeGroup">
+        <label class="type-option">
+          <input type="radio" name="ctype" value="normal" checked>
+          Normal / Ordinary
+        </label>
+        <label class="type-option">
+          <input type="radio" name="ctype" value="senior">
+          Senior
+        </label>
+        <label class="type-option">
+          <input type="radio" name="ctype" value="pwd">
+          PWD
+        </label>
+        <label class="type-option">
+          <input type="radio" name="ctype" value="student">
+          Student
+        </label>
+      </div>
+
+      <div class="price-box">
+        <div class="price-row">
+          <span class="price-label">Base fare</span>
+          <span class="price-value" id="baseFare">₱118.00</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">Discount (20% for Senior / PWD / Student)</span>
+          <span class="price-value" id="discount">₱0.00</span>
+        </div>
+        <div class="price-row total">
+          <span class="price-label">Total to pay</span>
+          <span class="price-value total" id="totalFare">₱118.00</span>
+        </div>
+      </div>
+
+      <div class="note">
+        Normal customers pay full fare (₱118.00). Senior, PWD, and Student customers get a 20% discount from the normal price.
+      </div>
+
+      <div class="error" id="errorBox">
+        Some trip details are missing. Please go back and complete the booking.
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-back" type="button" id="btnBack">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button class="btn btn-confirm" type="button" id="btnConfirm">
+          Confirm & Pay <i class="fas fa-check"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const NORMAL_PRICE = 118.0;
+  const infoBus = document.getElementById('infoBus');
+  const infoSeat = document.getElementById('infoSeat');
+  const infoTime = document.getElementById('infoTime');
+  const baseFareEl = document.getElementById('baseFare');
+  const discountEl = document.getElementById('discount');
+  const totalFareEl = document.getElementById('totalFare');
+  const errorBox = document.getElementById('errorBox');
+
+  baseFareEl.textContent = '₱' + NORMAL_PRICE.toFixed(2);
+
+  // Get bus, seat, time from next.html: payment.html?bus=...&seat=...&time=...
+  const params = new URLSearchParams(window.location.search);
+  const bus  = params.get('bus')  || '';
+  const seat = params.get('seat') || '';
+  const time = params.get('time') || '';
+
+  infoBus.textContent  = bus  || 'Not set';
+  infoSeat.textContent = seat || 'Not set';
+  infoTime.textContent = time || 'Not set';
+
+  if (!bus || !seat || !time) {
+    errorBox.style.display = 'block';
+  }
+
+  function updateFare() {
+    const typeInput = document.querySelector('input[name="ctype"]:checked');
+    const type = typeInput ? typeInput.value : 'normal';
+
+    let discount = 0;
+    if (type === 'senior' || type === 'pwd' || type === 'student') {
+      discount = NORMAL_PRICE * 0.20;
+    }
+
+    const total = NORMAL_PRICE - discount;
+    discountEl.textContent = '₱' + discount.toFixed(2);
+    totalFareEl.textContent = '₱' + total.toFixed(2);
+  }
+
+  document.getElementById('customerTypeGroup').addEventListener('change', updateFare);
+  updateFare();
+
+  // Back button: return to next.html, keeping the same query data if you want
+  document.getElementById('btnBack').addEventListener('click', () => {
+    const backParams = new URLSearchParams();
+    if (bus)  backParams.set('bus', bus);
+    if (time) backParams.set('time', time);
+    if (seat) backParams.set('seat', seat); // optional: keep seat in next.html
+    const qs = backParams.toString();
+    window.location.href = 'seat_selection.html' + (qs ? '?' + qs : '');
+  });
+
+  document.getElementById('btnConfirm').addEventListener('click', () => {
+    alert(
+      'Payment processing demo only.\n' +
+      'Bus: ' + (bus  || 'Not set') + '\n' +
+      'Seat: ' + (seat || 'Not set') + '\n' +
+      'Time: ' + (time || 'Not set') + '\n' +
+      'Amount to pay: ' + totalFareEl.textContent
+    );
+  });
+
+  // Shared theme script
+  (function() {
+    const htmlEl = document.documentElement;
+    const stored = localStorage.getItem('mmbc-theme');
+    const prefersDark = window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (stored === 'dark' || stored === 'light') {
+      htmlEl.setAttribute('data-theme', stored);
+    } else {
+      htmlEl.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    }
+
+    function setTheme(next) {
+      htmlEl.setAttribute('data-theme', next);
+      localStorage.setItem('mmbc-theme', next);
+    }
+
+    function toggleTheme() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      syncThemeControls();
+    }
+
+    function syncThemeControls() {
+      const current = htmlEl.getAttribute('data-theme') || 'light';
+      document.querySelectorAll('[data-theme-toggle-btn]').forEach(btn => {
+        const icon = btn.querySelector('[data-theme-icon]');
+        const label = btn.querySelector('[data-theme-label]');
+        if (icon) icon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (label) label.textContent = current === 'dark' ? 'Light' : 'Dark';
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-theme-toggle-btn]');
+      if (btn) toggleTheme();
+    });
+
+    syncThemeControls();
+  })();
+</script>
+</body>
+</html>
+
